@@ -1,0 +1,45 @@
+{
+  "router": {
+    "scope": "javascript,typescript",
+    "prefix": "router",
+    "body": [
+      "import { Router } from 'express'",
+      "const router = Router()",
+      "$0",
+      "export default router"
+    ],
+    "description": "Create router"
+  },
+  "entity": {
+    "scope": "typescript",
+    "prefix": "entity",
+    "body": [
+      "import {",
+      "  addTransformIdForSchema,",
+      "  getSchemaDefinition,",
+      "  registerModel,",
+      "} from '@/helpers/mongo'",
+      "import { Schema } from 'mongoose'",
+      "",
+      "class ${1:${TM_FILENAME_BASE}} {",
+      "  createdAt?: Date",
+      "  updatedAt?: Date",
+      "}",
+      "",
+      "const ${1:${TM_FILENAME_BASE}}Schema = new Schema<${1:${TM_FILENAME_BASE}}>(",
+      "  {",
+      "    ...getSchemaDefinition(${1:${TM_FILENAME_BASE}}),",
+      "  },",
+      "  { timestamps: true, autoIndex: true }",
+      ")",
+      "",
+      "addTransformIdForSchema(${1:${TM_FILENAME_BASE}}Schema)",
+      "",
+      "const ${1:${TM_FILENAME_BASE}}Model = registerModel<${1:${TM_FILENAME_BASE}}>('${1:${TM_FILENAME_BASE}}', ${1:${TM_FILENAME_BASE}}Schema)",
+      "const ${1:${TM_FILENAME_BASE}}Tools = { model: ${1:${TM_FILENAME_BASE}}Model }",
+      "",
+      "export { ${1:${TM_FILENAME_BASE}}, ${1:${TM_FILENAME_BASE}}Schema, ${1:${TM_FILENAME_BASE}}Model, ${1:${TM_FILENAME_BASE}}Tools }",
+      ""
+    ]
+  }
+}
