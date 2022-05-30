@@ -1,4 +1,5 @@
-import { envTool } from '@/helpers'
+import { envTool } from '@/helpers/env'
+
 import { createConnection } from 'mongoose'
 import { ENV } from './env'
 import consola from 'consola'

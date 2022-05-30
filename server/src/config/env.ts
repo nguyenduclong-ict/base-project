@@ -1,4 +1,4 @@
-import { envTool } from '@/helpers'
+import { envTool } from '@/helpers/env'
 
 export const ENV = {
   PORT: envTool.parseNumber(process.env.PORT) || 3000,

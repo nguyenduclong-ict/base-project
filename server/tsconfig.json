@@ -1,16 +1,17 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "outDir": "./build",
     "baseUrl": "./src",
-    "target": "es2016",
+    "target": "es6",
     "module": "commonjs",
     "esModuleInterop": true,
+    "allowJs": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "strictNullChecks": false,
     "skipLibCheck": true,
-    "lib": ["ES2015"],
+    "lib": ["es6", "dom", "es2017"],
     "paths": {
       "@/*": ["./*"]
     },
