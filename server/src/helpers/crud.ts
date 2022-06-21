@@ -1,4 +1,4 @@
-import { RequestHandler, Response, Router } from 'express'
+import { Request, RequestHandler, Response, Router } from 'express'
 import { findDocuments, listDocuments } from './mongo'
 import { Model } from 'mongoose'
 import _ from 'lodash'
@@ -8,13 +8,15 @@ export type LiteralUnion<T extends U, U = string> =
   | T
   | (U & Record<string, never>)
 
-export const sendError = (
-  res: Response,
+export function sendError(
+  this: Request,
   error: { code?: number; message?: string; data?: any } = {}
-) => {
-  return res
-    .status(error.code || 500)
-    .json({ code: error.code, message: error.message, data: error.data })
+) {
+  return this.res.status(error.code || 500).json({
+    code: error.code,
+    message: error.message,
+    data: error.data,
+  })
 }
 
 export const listEntityController = (model: Model<any>): RequestHandler => {

@@ -8,6 +8,9 @@ import { Schema, SchemaTypes } from 'mongoose'
 import { Role } from './Role'
 
 class User {
+  _id?: any
+  id?: any
+
   @field(String)
   username: string
 

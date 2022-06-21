@@ -1,5 +1,5 @@
 import { RoleModel, UserModel } from '@/db'
-import { hasPassword } from '@/helpers/auth'
+import { hashPassword } from '@/helpers/scrypt'
 
 export default async function () {
   const [adminRole, staffRole, customerRole] = await RoleModel.create([
@@ -31,7 +31,7 @@ export default async function () {
     {
       name: 'Admin',
       username: 'admin',
-      password: await hasPassword(process.env.ADMIN_PASSWORD),
+      password: await hashPassword(process.env.ADMIN_PASSWORD),
       is_active: true,
       is_admin: true,
       type: 'admin',

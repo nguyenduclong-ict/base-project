@@ -18,7 +18,7 @@ export default {
   css: ['~/assets/css/main.scss', 'element-ui/lib/theme-chalk/index.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/element-ui'],
+  plugins: ['@/plugins/element-ui', '@/plugins/mixin'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -29,18 +29,45 @@ export default {
     '@nuxt/typescript-build',
   ],
 
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/tailwindcss'],
+
+  devServerHandlers: [],
+
+  auth: {
+    strategies: {
+      local: {
+        scheme: 'refresh',
+        token: {
+          property: 'token',
+          global: true,
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+        },
+        user: {
+          property: '',
+        },
+        endpoints: {
+          login: { url: '/auth/login', method: 'post' },
+          logout: { url: '/auth/logout', method: 'post' },
+          refresh: { url: '/auth/refresh', method: 'post' },
+          user: { url: '/auth/me', method: 'get' },
+        },
+      },
+    },
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    baseURL: process.env.API_URL,
   },
 
   serverMiddleware: ['~/plugins/ssr'],
 
   router: {
-    middleware: [],
+    middleware: ['auth'],
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

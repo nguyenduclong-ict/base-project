@@ -1,5 +1,5 @@
 const Config = {
-  spaPaths: ['/admin', '/test'],
+  spaPaths: ['/'],
   ssrPaths: [],
 }
 
