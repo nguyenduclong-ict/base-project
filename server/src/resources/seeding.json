@@ -26,6 +26,51 @@
       "type": "customer"
     }
   ],
-  "users": [],
-  "categories": []
+  "users": [
+    {
+      "name": "Admin",
+      "username": "admin",
+      "password": "$2a$12$EcpVDV2Latt9fnENz036r.6/e/B7ss3hyrYFD6AE2OS3woZNGRxie",
+      "is_active": true,
+      "is_admin": true,
+      "type": "admin",
+      "roles": ["62b53a54e4ed5d1b4509dd33"]
+    }
+  ],
+  "categories": [
+    {
+      "_id": "62b53c57ff08302487de9145",
+      "name": "Điện thoại",
+      "slug": "phone",
+      "children": [
+        {
+          "_id": "62b53ca9f0c394b24f9c6255",
+          "name": "Iphone",
+          "slug": "iphone"
+        },
+        {
+          "_id": "62b53cad0ea5f97c0fc131f3",
+          "name": "Samsung",
+          "slug": "samsung"
+        }
+      ]
+    },
+    {
+      "_id": "62b53c5d04f75c1923d1aff8",
+      "name": "Laptop",
+      "slug": "laptop",
+      "children": [
+        {
+          "_id": "62b53cd20c7cb9f50c5ad4f4",
+          "name": "Dell",
+          "slug": "dell"
+        },
+        {
+          "_id": "62b53cd7a1ac080d903863cf",
+          "name": "Macbook",
+          "slug": "macbook"
+        }
+      ]
+    }
+  ]
 }

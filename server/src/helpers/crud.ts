@@ -1,5 +1,10 @@
 import { Request, RequestHandler, Response, Router } from 'express'
-import { findDocuments, listDocuments } from './mongo'
+import {
+  findDocuments,
+  listDocuments,
+  parseJSON,
+  parsePopulateFromRequest,
+} from './mongo'
 import { Model } from 'mongoose'
 import _ from 'lodash'
 import { resolve as resolveUrl } from 'url'
@@ -21,48 +26,79 @@ export function sendError(
 
 export const listEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
-    let query = {}
+    try {
+      let query = {}
 
-    if (req.query.query) {
-      try {
-        query = JSON.parse(req.query.query as string)
-      } catch (error) {}
+      if (req.query.query) {
+        try {
+          query = JSON.parse(req.query.query as string)
+        } catch (error) {}
+      }
+
+      const result = await listDocuments(model, {
+        query,
+        page: req.query.page as any,
+        pageSize: req.query.pageSize as any,
+        populates: req.query.populates as any,
+        sort: req.query.sort as any,
+        select: req.query.select as any,
+        search: req.query.search as any,
+      })
+
+      res.json(result)
+    } catch (error: any) {
+      req.sendError({ code: 500, message: error.message || error.name })
     }
+  }
+}
 
-    const result = await listDocuments(model, {
-      query,
-      page: req.query.page as any,
-      pageSize: req.query.pageSize as any,
-      populates: req.query.populates as any,
-      sort: req.query.sort as any,
-      select: req.query.select as any,
-      search: req.query.search as any,
-    })
+export const findOneEntityController = (model: Model<any>): RequestHandler => {
+  return async (req, res, next) => {
+    try {
+      let query = {}
 
-    res.json(result)
+      if (req.query.query) {
+        query = parseJSON(req.query.query)
+      }
+
+      const queryBuilder = model.findOne(query)
+
+      parsePopulateFromRequest(req.query.populates || []).forEach((item) => {
+        queryBuilder.populate(item)
+      })
+
+      const result = await queryBuilder.exec()
+      res.json(result)
+    } catch (error: any) {
+      req.sendError({ code: 500, message: error.message || error.name })
+    }
   }
 }
 
 export const findEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
-    let query = {}
+    try {
+      let query = {}
 
-    if (req.query.query) {
-      try {
-        query = JSON.parse(req.query.query as string)
-      } catch (error) {}
+      if (req.query.query) {
+        try {
+          query = JSON.parse(req.query.query as string)
+        } catch (error) {}
+      }
+
+      const result = await findDocuments(model, {
+        query,
+        page: req.query.page as any,
+        populates: req.query.populates as any,
+        sort: req.query.sort as any,
+        select: req.query.select as any,
+        search: req.query.search as any,
+      })
+
+      res.json(result)
+    } catch (error: any) {
+      req.sendError({ code: 500, message: error.message || error.name })
     }
-
-    const result = await findDocuments(model, {
-      query,
-      page: req.query.page as any,
-      populates: req.query.populates as any,
-      sort: req.query.sort as any,
-      select: req.query.select as any,
-      search: req.query.search as any,
-    })
-
-    res.json(result)
   }
 }
 
@@ -79,7 +115,7 @@ export const updateEntityController = (model: Model<any>): RequestHandler => {
       await entity.save()
       return res.json(entity)
     } catch (error: any) {
-      return next({ code: 500, message: error.message || error.name })
+      req.sendError({ code: 500, message: error.message || error.name })
     }
   }
 }
@@ -90,7 +126,7 @@ export const createEntityController = (model: Model<any>): RequestHandler => {
       const entity = await model.create(req.body)
       return res.json(entity)
     } catch (error: any) {
-      return next({ code: 500, message: error.message || error.name })
+      req.sendError({ code: 500, message: error.message || error.name })
     }
   }
 }
@@ -110,40 +146,70 @@ export const deleteEntityController = (model: Model<any>): RequestHandler => {
       res.json(result)
     } catch (error: any) {
       console.error('deleteEntityController error', error)
-      return next({ code: 500, message: error.message || error.name })
+      req.sendError({ code: 500, message: error.message || error.name })
     }
   }
 }
 
-type RestMethod = 'list' | 'create' | 'update' | 'find' | 'delete'
+type RestMethod = 'list' | 'create' | 'update' | 'find' | 'delete' | 'findOne'
 
 export const registerRestApi = (
   router: Router,
   model: Model<any>,
-  path = '/',
-  actions: LiteralUnion<RestMethod>[] = [
-    'list',
-    'create',
-    'update',
-    'find',
-    'delete',
-  ]
+  {
+    path = '/',
+    actions = ['list', 'create', 'update', 'find', 'findOne', 'delete'],
+    middlewares = {},
+  }: {
+    path?: string
+    actions?: LiteralUnion<RestMethod>[]
+    middlewares?: { [k in RestMethod]?: any[] }
+  } = {}
 ) => {
   actions.forEach((action) => {
+    // create
     if (action === 'create') {
-      router.post(path, createEntityController(model))
+      router.post(
+        path,
+        ...(middlewares.create || []),
+        createEntityController(model)
+      )
     }
-    if (action === 'list') {
-      router.get(path, listEntityController(model))
+    // list
+    else if (action === 'list') {
+      router.get(path, ...(middlewares.list || []), listEntityController(model))
     }
-    if (action === 'find') {
-      router.get(resolveUrl(path, 'find'), findEntityController(model))
+    // find One
+    else if (action === 'findOne') {
+      router.get(
+        resolveUrl(path, '/findone'),
+        ...(middlewares.findOne || []),
+        findOneEntityController(model)
+      )
     }
-    if (action === 'update') {
-      router.put(resolveUrl(path, ':id'), updateEntityController(model))
+    // find
+    else if (action === 'find') {
+      router.get(
+        resolveUrl(path, '/find'),
+        ...(middlewares.find || []),
+        findEntityController(model)
+      )
     }
-    if (action === 'delete') {
-      router.delete(resolveUrl(path, ':id'), deleteEntityController(model))
+    // update
+    else if (action === 'update') {
+      router.put(
+        resolveUrl(path, '/:id'),
+        ...(middlewares.update || []),
+        updateEntityController(model)
+      )
+    }
+    // delete
+    else if (action === 'delete') {
+      router.delete(
+        resolveUrl(path, '/:id'),
+        ...(middlewares.delete || []),
+        deleteEntityController(model)
+      )
     }
   })
 }

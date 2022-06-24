@@ -1,20 +1,19 @@
+import { ENV } from '@/config'
 import { RoleModel, UserModel } from '@/db'
 import { hashPassword } from '@/helpers/scrypt'
 import seedingJson from '@/resources/seeding.json'
 
 export default async function () {
-  const roles = await RoleModel.create(seedingJson.roles)
-  const adminRole = roles.find((role) => role.uid === 'admin')
+  await RoleModel.create(seedingJson.roles)
 
-  const [] = await UserModel.create([
-    {
-      name: 'Admin',
-      username: 'admin',
-      password: await hashPassword(process.env.ADMIN_PASSWORD),
-      is_active: true,
-      is_admin: true,
-      type: 'admin',
-      roles: [adminRole.id],
-    },
-  ])
+  const adminPasswordHashed = await hashPassword(
+    process.env.ADMIN_PASSWORD || 'a12345678X'
+  )
+
+  await UserModel.create(
+    seedingJson.users.map((user) => ({
+      ...user,
+      password: user.password || adminPasswordHashed,
+    }))
+  )
 }

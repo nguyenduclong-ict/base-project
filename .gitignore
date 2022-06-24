@@ -90,3 +90,6 @@ sw.*
 *.swp
 
 build
+
+# server
+server/resources/seeding.json

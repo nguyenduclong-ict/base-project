@@ -1,3 +1,4 @@
+import { createSlug } from '@/helpers'
 import {
   addTransformIdForSchema,
   getSchemaDefinition,
@@ -5,6 +6,7 @@ import {
   field,
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
+import shortid from 'shortid'
 
 /** ProductAttribute */
 class ProductAttribute {
@@ -64,11 +66,18 @@ const ProductVariantSchema = new Schema<ProductVariant>(
 addTransformIdForSchema(ProductVariantSchema)
 
 class Product {
-  @field(String)
-  slug: string
-
-  @field(String)
+  @field({ type: String, required: true })
   name: string
+
+  @field({
+    type: String,
+    required: true,
+    unique: true,
+    default: function (this, doc: any) {
+      return shortid() + '-' + createSlug(doc.name)
+    },
+  })
+  slug: string
 
   @field(String)
   description: string
@@ -85,7 +94,13 @@ class Product {
   @field({ type: [ProductVariantSchema], default: [] })
   variants: ProductVariant[]
 
-  @field({ type: Boolean })
+  @field({ type: Boolean, default: false })
+  is_variant?: boolean
+
+  @field({ type: SchemaTypes.ObjectId, ref: 'Product' })
+  variant_of?: Product
+
+  @field({ type: Boolean, default: false })
   has_variants: boolean
 
   @field({ type: Number, min: 0 })

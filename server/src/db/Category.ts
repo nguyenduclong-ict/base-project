@@ -11,6 +11,9 @@ class Category {
   @field({ type: String, unique: true, required: true })
   slug: string
 
+  @field({ type: String })
+  color?: string
+
   @field({ type: String, required: true })
   name: string
 

@@ -95,7 +95,7 @@ export const listDocuments = async <T>(
   const pageSize = +(params.pageSize || 10)
 
   let query: any = { ...params.query }
-  let populates: any[] = []
+  let populates: any[] = parsePopulateFromRequest(params.populates || [])
   let sort: any = {}
 
   if (params.search) {
@@ -108,25 +108,6 @@ export const listDocuments = async <T>(
     } else if (Array.isArray(params.sort)) {
       params.sort.forEach((sortItem: any) => {
         Object.assign(sort, sortStringToObject(sortItem))
-      })
-    }
-  }
-
-  if (params.populates) {
-    if (typeof params.populates === 'string') {
-      if (
-        (params.populates as any).startsWith('[') &&
-        (params.populates as any).endsWith(']')
-      ) {
-        try {
-          populates.push(...JSON.parse(params.populates))
-        } catch (error) {}
-      } else {
-        params.populates && populates.push(params.populates)
-      }
-    } else if (Array.isArray(params.populates)) {
-      params.populates.forEach((item: any) => {
-        item && populates.push(parsePopulateItem(item))
       })
     }
   }
@@ -172,7 +153,7 @@ export const findDocuments = async <T>(
   const pageSize = +(params.pageSize || 10)
 
   let query: any = { ...params.query }
-  let populates: any[] = []
+  let populates: any[] = parsePopulateFromRequest(params.populates || [])
   let sort: any = {}
 
   if (params.search) {
@@ -185,25 +166,6 @@ export const findDocuments = async <T>(
     } else if (Array.isArray(params.sort)) {
       params.sort.forEach((sortItem: any) => {
         Object.assign(sort, sortStringToObject(sortItem))
-      })
-    }
-  }
-
-  if (params.populates) {
-    if (typeof params.populates === 'string') {
-      if (
-        (params.populates as any).startsWith('[') &&
-        (params.populates as any).endsWith(']')
-      ) {
-        try {
-          populates.push(...JSON.parse(params.populates))
-        } catch (error) {}
-      } else {
-        params.populates && populates.push(params.populates)
-      }
-    } else if (Array.isArray(params.populates)) {
-      params.populates.forEach((item: any) => {
-        item && populates.push(parsePopulateItem(item))
       })
     }
   }
@@ -244,10 +206,30 @@ function sortStringToObject(value: string) {
   }
 }
 
-function parsePopulateItem(value: any) {
-  try {
-    return JSON.parse(value as string)
-  } catch (error) {
-    return value
+export function parsePopulateFromRequest(populates: any) {
+  const result: any[] = []
+  if (populates) {
+    populates = parseJSON(populates)
+    if (Array.isArray(populates)) {
+      populates.forEach((item: any) => {
+        result.push((item = parseJSON(item)))
+      })
+    } else {
+      result.push(populates)
+    }
   }
+  return result
+}
+
+export const parseJSON = (value: any) => {
+  try {
+    if (typeof value !== 'string') return value
+    if (
+      (value.startsWith('[') && value.endsWith(']')) ||
+      (value.startsWith('{') && value.endsWith('}'))
+    ) {
+      return JSON.parse(value)
+    }
+  } catch (error) {}
+  return value
 }

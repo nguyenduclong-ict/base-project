@@ -3,6 +3,9 @@ import productRoutes from './product'
 import categoryRoutes from './category'
 import authRoutes from './auth'
 import { sendError } from '@/helpers'
+import { isAuthenticated } from '@/middleware'
+import { connection } from '@/config'
+import { CategoryModel } from '@/db'
 
 const router = Router()
 router.use((req, res, next) => {
@@ -11,7 +14,7 @@ router.use((req, res, next) => {
 })
 
 router.use('/auth', authRoutes)
-router.use('/product', productRoutes)
-router.use('/category', categoryRoutes)
+router.use('/product', isAuthenticated, productRoutes)
+router.use('/category', isAuthenticated, categoryRoutes)
 
 export default router
