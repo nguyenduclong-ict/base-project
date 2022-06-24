@@ -16,6 +16,9 @@ const connection = createConnection(
     user: ENV.MONGO_USER,
     pass: ENV.MONGO_PASSWORD,
     dbName: ENV.MONGO_DATABASE,
+    authSource: ENV.MONGO_AUTH_SOURCE || ENV.MONGO_DATABASE,
+    replicaSet: ENV.MONGO_REPLICASET,
+    directConnection: true,
   }
 )
 

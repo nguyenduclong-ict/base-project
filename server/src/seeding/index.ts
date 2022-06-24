@@ -1,12 +1,8 @@
-import { waitForConnectionReady, connection, ENV } from '@/config'
+import { connection, waitForConnectionReady } from '@/config'
+import { RoleModel } from '@/db'
 import consola from 'consola'
 import globby from 'globby'
 import path from 'path'
-import { RoleModel } from '@/db'
-
-// const seedingFunctions = [require('./0001_user'), require('./0002_product')]
-
-// console.log(seedingFunctions)
 
 async function seeding() {
   // drop all collection

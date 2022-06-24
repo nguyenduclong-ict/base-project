@@ -1,14 +1,88 @@
 version: '3.9'
 
 services:
-  mongo:
-    image: mongo
-    restart: always
+  mongodb-primary:
+    image: 'bitnami/mongodb:4.2'
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-primary
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGODB_DATABASE=$MONGO_DATABASE
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
     ports:
       - 27017:27017
+    volumes:
+      - 'mongodb_master_data:/bitnami'
+
+  mongodb-secondary:
+    image: 'bitnami/mongodb:4.2'
+    depends_on:
+      - mongodb-primary
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-root}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-a12345678X}
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-secondary
+      - MONGODB_REPLICA_SET_MODE=secondary
+      - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
+      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+      - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+    ports:
+      - 27018:27017
+
+  mongodb-arbiter:
+    image: 'bitnami/mongodb:4.2'
+    depends_on:
+      - mongodb-primary
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-arbiter
+      - MONGODB_REPLICA_SET_MODE=arbiter
+      - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
+      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+      - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+  # mongodb-primary:
+  #   image: 'bitnami/mongodb:4.2'
+  #   restart: always
+  #   networks:
+  #     - mongo-net
+  #   environment:
+  #     - MONGODB_ADVERTISED_HOSTNAME=mongodb-primary
+  #     - MONGODB_REPLICA_SET_MODE=primary
+  #     - MONGODB_ROOT_PASSWORD=$MONGO_PASSWORD
+  #     - MONGODB_REPLICA_SET_KEY=rs000
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - 'mongo_data:/bitnami'
+
+  # mongodb-secondary:
+  #   image: 'bitnami/mongodb:4.2'
+  #   restart: always
+  #   networks:
+  #     - mongo-net
+  #   depends_on:
+  #     - mongodb-primary
+  #   environment:
+  #     - MONGODB_ADVERTISED_HOSTNAME=mongodb-secondary
+  #     - MONGODB_REPLICA_SET_MODE=secondary
+  #     - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
+  #     - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+  #     - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=$MONGO_PASSWORD
+  #     - MONGODB_REPLICA_SET_KEY=rs000
+  # mongodb-arbiter:
+  #   image: 'bitnami/mongodb:4.2'
+  #   restart: always
+  #   networks:
+  #     - mongo-net
+  #   depends_on:
+  #     - mongodb-primary
+  #   environment:
+  #     - MONGODB_ADVERTISED_HOSTNAME=mongodb-arbiter
+  #     - MONGODB_REPLICA_SET_MODE=arbiter
+  #     - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
+  #     - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+  #     - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=$MONGO_PASSWORD
+  #     - MONGODB_REPLICA_SET_KEY=rs000
+
   minio:
     image: minio/minio
     command: server /data --console-address ":9001"
@@ -20,5 +94,11 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-password}
 
 volumes:
+  mongodb_master_data:
+    driver: local
   mongo_data:
   minio_data:
+
+
+networks:
+  mongo-net:

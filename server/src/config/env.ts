@@ -8,6 +8,8 @@ export const ENV = {
   MONGO_PASSWORD: process.env.MONGO_PASSWORD,
   MONGO_HOST: envTool.parseString(process.env.MONGO_HOST),
   MONGO_DATABASE: process.env.MONGO_DATABASE,
+  MONGO_AUTH_SOURCE: process.env.MONGO_AUTH_SOURCE,
+  MONGO_REPLICASET: process.env.MONGO_REPLICASET,
   MONGO_PORT: envTool.parseNumber(process.env.MONGO_PORT) || 27017,
   MINIO_ACCESS_KEY: process.env.MINIO_ACCESS_KEY,
   MINIO_SECRET_KEY: process.env.MINIO_SECRET_KEY,
