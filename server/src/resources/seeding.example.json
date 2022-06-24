@@ -1,0 +1,31 @@
+{
+  "roles": [
+    {
+      "_id": "62b53a54e4ed5d1b4509dd33",
+      "name": "Admin",
+      "uid": "admin",
+      "is_default": true,
+      "permissions": [],
+      "full_permission": true,
+      "type": "admin"
+    },
+    {
+      "_id": "62b53afb2de6b51a5caa1c93",
+      "name": "Staff",
+      "uid": "staff",
+      "is_default": true,
+      "permissions": [],
+      "type": "admin"
+    },
+    {
+      "_id": "62b53b0039ae3dad78f2c416",
+      "name": "Customer",
+      "uid": "customer",
+      "is_default": true,
+      "permissions": [],
+      "type": "customer"
+    }
+  ],
+  "users": [],
+  "categories": []
+}

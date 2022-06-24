@@ -1,31 +1,10 @@
 import { RoleModel, UserModel } from '@/db'
 import { hashPassword } from '@/helpers/scrypt'
+import seedingJson from '@/resources/seeding.json'
 
 export default async function () {
-  const [adminRole, staffRole, customerRole] = await RoleModel.create([
-    {
-      name: 'Admin',
-      uid: 'admin',
-      is_default: true,
-      permissions: [],
-      full_permission: true,
-      type: 'admin',
-    },
-    {
-      name: 'Staff',
-      uid: 'staff',
-      is_default: true,
-      permissions: [],
-      type: 'admin',
-    },
-    {
-      name: 'Customer',
-      uid: 'customer',
-      is_default: true,
-      permissions: [],
-      type: 'customer',
-    },
-  ])
+  const roles = await RoleModel.create(seedingJson.roles)
+  const adminRole = roles.find((role) => role.uid === 'admin')
 
   const [] = await UserModel.create([
     {

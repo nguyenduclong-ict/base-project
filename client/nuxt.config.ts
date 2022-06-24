@@ -4,7 +4,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   srcDir: __dirname,
   head: {
-    title: 'base-nuxt',
+    title: 'Sale Admin',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -27,7 +27,12 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    '@nuxtjs/svg-sprite',
   ],
+
+  svgSprite: {
+    input: '~/assets/svg/',
+  },
 
   modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/tailwindcss'],
 

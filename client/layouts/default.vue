@@ -1,20 +1,31 @@
 <template>
   <div id="layout-default">
     <Sidebar id="sidebar" />
-    <div class="overlay" v-if="sidebar"></div>
-    <el-scrollbar id="content" :wrap-style="[{ maxHeight: '100vh' }]">
-      <nuxt />
-    </el-scrollbar>
+    <div class="overlay" v-if="sidebar" @click="TOGGLE_SIDEBAR()"></div>
+
+    <div>
+      <Header />
+      <el-scrollbar
+        id="content"
+        :wrap-style="[{ maxHeight: 'calc(100vh - 48px)', overflowX: 'hidden' }]"
+      >
+        <nuxt />
+      </el-scrollbar>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import Sidebar from '~/components/Layout/Sidebar.vue'
+import Header from '~/components/Layout/Header.vue'
 export default {
-  components: { Sidebar },
+  components: { Sidebar, Header },
   computed: {
     ...mapState(['sidebar']),
+  },
+  methods: {
+    ...mapMutations(['TOGGLE_SIDEBAR']),
   },
 }
 </script>
@@ -22,6 +33,7 @@ export default {
 <style lang="scss" scoped>
 #layout-default {
   display: flex;
+  height: 100vh;
 
   #sidebar {
     flex: none;
