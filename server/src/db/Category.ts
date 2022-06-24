@@ -6,6 +6,7 @@ import {
   field,
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
+import { Shop } from './Shop'
 
 class Category {
   @field({ type: String, unique: true, required: true })
@@ -19,6 +20,9 @@ class Category {
 
   @field({ type: SchemaTypes.ObjectId, ref: 'Category' })
   parent: Category
+
+  @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
+  shop: Shop
 
   createdAt?: Date | undefined
   updatedAt?: Date | undefined

@@ -15,7 +15,9 @@ export const getUser: RequestHandler = async (req, res, next) => {
       if (tokenData.userId) {
         const user = await UserModel.findOne({
           _id: tokenData.userId,
-        }).populate('roles')
+        })
+          .populate('roles')
+          .populate('shops')
         req.user = user.toJSON()
       }
     } catch (error) {

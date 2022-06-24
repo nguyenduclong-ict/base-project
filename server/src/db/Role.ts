@@ -5,7 +5,8 @@ import {
   registerModel,
   field,
 } from '@/helpers/mongo'
-import { Schema } from 'mongoose'
+import { Schema, SchemaTypes } from 'mongoose'
+import { Shop } from './Shop'
 
 class Role {
   @field(String)
@@ -13,9 +14,6 @@ class Role {
 
   @field({ type: String, unique: true })
   uid: string
-
-  @field({ type: String, enum: ['admin', 'customer'], default: 'user' })
-  type: 'admin' | 'customer'
 
   @field({
     type: [String],
@@ -29,6 +27,9 @@ class Role {
 
   @field({ type: Boolean, default: false })
   is_default: boolean
+
+  @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
+  shop: Shop
 
   createdAt?: Date
   updatedAt?: Date

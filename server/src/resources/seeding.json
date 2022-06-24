@@ -1,4 +1,18 @@
 {
+  "shops": [
+    {
+      "_id": "62b5f8de61ef0c1ce106eacb",
+      "name": "Shop 1",
+      "code": "1",
+      "image_url": "https://picsum.photos/id/21/200/200"
+    },
+    {
+      "_id": "62b5f8de61ef0c1ce106eacc",
+      "name": "Shop 2",
+      "code": "2",
+      "image_url": "https://picsum.photos/id/22/200/200"
+    }
+  ],
   "roles": [
     {
       "_id": "62b53a54e4ed5d1b4509dd33",
@@ -6,8 +20,8 @@
       "uid": "admin",
       "is_default": true,
       "permissions": [],
-      "full_permission": true,
-      "type": "admin"
+      "shop": "62b5f8de61ef0c1ce106eacb",
+      "full_permission": true
     },
     {
       "_id": "62b53afb2de6b51a5caa1c93",
@@ -15,15 +29,7 @@
       "uid": "staff",
       "is_default": true,
       "permissions": [],
-      "type": "admin"
-    },
-    {
-      "_id": "62b53b0039ae3dad78f2c416",
-      "name": "Customer",
-      "uid": "customer",
-      "is_default": true,
-      "permissions": [],
-      "type": "customer"
+      "shop": "62b5f8de61ef0c1ce106eacb"
     }
   ],
   "users": [
@@ -34,7 +40,8 @@
       "is_active": true,
       "is_admin": true,
       "type": "admin",
-      "roles": ["62b53a54e4ed5d1b4509dd33"]
+      "roles": ["62b53a54e4ed5d1b4509dd33"],
+      "shops": ["62b5f8de61ef0c1ce106eacb", "62b5f8de61ef0c1ce106eacc"]
     }
   ],
   "categories": [
@@ -42,16 +49,19 @@
       "_id": "62b53c57ff08302487de9145",
       "name": "Điện thoại",
       "slug": "phone",
+      "shop": "62b5f8de61ef0c1ce106eacb",
       "children": [
         {
           "_id": "62b53ca9f0c394b24f9c6255",
           "name": "Iphone",
-          "slug": "iphone"
+          "slug": "iphone",
+          "shop": "62b5f8de61ef0c1ce106eacb"
         },
         {
           "_id": "62b53cad0ea5f97c0fc131f3",
           "name": "Samsung",
-          "slug": "samsung"
+          "slug": "samsung",
+          "shop": "62b5f8de61ef0c1ce106eacb"
         }
       ]
     },
@@ -59,16 +69,19 @@
       "_id": "62b53c5d04f75c1923d1aff8",
       "name": "Laptop",
       "slug": "laptop",
+      "shop": "62b5f8de61ef0c1ce106eacb",
       "children": [
         {
           "_id": "62b53cd20c7cb9f50c5ad4f4",
           "name": "Dell",
-          "slug": "dell"
+          "slug": "dell",
+          "shop": "62b5f8de61ef0c1ce106eacb"
         },
         {
           "_id": "62b53cd7a1ac080d903863cf",
           "name": "Macbook",
-          "slug": "macbook"
+          "slug": "macbook",
+          "shop": "62b5f8de61ef0c1ce106eacb"
         }
       ]
     }

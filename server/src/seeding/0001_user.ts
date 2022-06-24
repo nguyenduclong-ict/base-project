@@ -1,4 +1,3 @@
-import { ENV } from '@/config'
 import { RoleModel, UserModel } from '@/db'
 import { hashPassword } from '@/helpers/scrypt'
 import seedingJson from '@/resources/seeding.json'

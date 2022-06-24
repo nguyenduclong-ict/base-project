@@ -7,6 +7,7 @@ import {
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
 import shortid from 'shortid'
+import { Shop } from './Shop'
 
 /** ProductAttribute */
 class ProductAttribute {
@@ -111,6 +112,9 @@ class Product {
 
   @field(Boolean)
   is_sale_off: boolean
+
+  @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
+  shop: Shop
 
   createdAt?: Date
   updatedAt?: Date

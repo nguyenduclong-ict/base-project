@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsnd -r tsconfig-paths/register --respawn --files src/index.ts",
-    "seed": "ts-node -r tsconfig-paths/register src/seeding/seeding_run.ts",
+    "seed": "ts-node -r tsconfig-paths/register --files src/seeding/seeding_run.ts",
     "build": "tsc",
     "start": "TS_NODE_BASEURL=./build node -r tsconfig-paths/register build/index.js",
     "dc:up": "docker-compose up -d"

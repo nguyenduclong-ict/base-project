@@ -6,6 +6,7 @@ import {
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
 import { Role } from './Role'
+import { Shop } from './Shop'
 
 class User {
   _id?: any
@@ -31,6 +32,9 @@ class User {
 
   @field({ type: [SchemaTypes.ObjectId], ref: 'Role' })
   roles: Role[]
+
+  @field({ type: [SchemaTypes.ObjectId], ref: 'Shop' })
+  shops: Shop[]
 
   createdAt?: Date
   updatedAt?: Date
