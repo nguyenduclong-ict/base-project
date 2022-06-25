@@ -7,7 +7,7 @@ import {
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
 import shortid from 'shortid'
-import { Shop } from './Shop'
+import { Shop } from '../Shop'
 
 /** ProductAttribute */
 class ProductAttribute {

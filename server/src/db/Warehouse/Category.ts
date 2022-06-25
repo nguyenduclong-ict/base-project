@@ -6,7 +6,7 @@ import {
   field,
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
-import { Shop } from './Shop'
+import { Shop } from '../Shop'
 
 class Category {
   @field({ type: String, unique: true, required: true })
