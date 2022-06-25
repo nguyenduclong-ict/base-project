@@ -15,24 +15,30 @@ export type LiteralUnion<T extends U, U = string> =
 
 export function sendError(
   this: Request,
-  error: { code?: number; message?: string; data?: any } = {}
+  error: { code?: number; message?: string; data?: any; type?: string } = {}
 ) {
   return this.res.status(error.code || 500).json({
     code: error.code,
     message: error.message,
     data: error.data,
+    type: error.type,
   })
 }
 
 export const listEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
     try {
-      let query = {}
+      let query: any = {}
 
       if (req.query.query) {
         try {
           query = JSON.parse(req.query.query as string)
         } catch (error) {}
+      }
+
+      // Inject shop query
+      if (req.shopId) {
+        query[req.shopId] = req.shopId
       }
 
       const result = await listDocuments(model, {
@@ -55,10 +61,15 @@ export const listEntityController = (model: Model<any>): RequestHandler => {
 export const findOneEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
     try {
-      let query = {}
+      let query: any = {}
 
       if (req.query.query) {
         query = parseJSON(req.query.query)
+      }
+
+      // Inject shop query
+      if (req.shopId) {
+        query[req.shopId] = req.shopId
       }
 
       const queryBuilder = model.findOne(query)
@@ -78,12 +89,17 @@ export const findOneEntityController = (model: Model<any>): RequestHandler => {
 export const findEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
     try {
-      let query = {}
+      let query: any = {}
 
       if (req.query.query) {
         try {
           query = JSON.parse(req.query.query as string)
         } catch (error) {}
+      }
+
+      // Inject shop query
+      if (req.shopId) {
+        query[req.shopId] = req.shopId
       }
 
       const result = await findDocuments(model, {
@@ -108,9 +124,10 @@ export const updateEntityController = (model: Model<any>): RequestHandler => {
 
     try {
       const entity = await model.findById(id)
-      if (!entity) {
+      if (!entity || (req.shopId && req.shopId !== entity.toJSON().shop)) {
         return next({ code: 404, message: 'Entity not exists!' })
       }
+
       Object.assign(entity, _.omit(req.body, 'id'))
       await entity.save()
       return res.json(entity)
@@ -123,7 +140,11 @@ export const updateEntityController = (model: Model<any>): RequestHandler => {
 export const createEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
     try {
-      const entity = await model.create(req.body)
+      const body: any = req.body
+      if (req.shopId) {
+        body.shop = req.shopId
+      }
+      const entity = await model.create(body)
       return res.json(entity)
     } catch (error: any) {
       req.sendError({ code: 500, message: error.message || error.name })
@@ -142,7 +163,10 @@ export const deleteEntityController = (model: Model<any>): RequestHandler => {
         })
       }
 
-      const result = await model.deleteMany({ _id: { $in: ids } }, {})
+      const queryDelete: any = { _id: { $in: ids } }
+      if (req.shopId) queryDelete.shop = req.shopId
+
+      const result = await model.deleteMany(queryDelete, {})
       res.json(result)
     } catch (error: any) {
       console.error('deleteEntityController error', error)

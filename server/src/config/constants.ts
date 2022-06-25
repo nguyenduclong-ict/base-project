@@ -9,7 +9,12 @@ export const Constants = {
       name: 'Size',
     },
   ],
-  Permissions: {},
+  Permissions: {
+    CREATE_PRODUCT: 'create_product',
+    UPDATE_PRODUCT: 'update_product',
+    DELETE_PRODUCT: 'delete_product',
+    VIEW_PRODUCT: 'view_product',
+  },
 }
 
-export const Colors = ['#37E2D5', '#590696', '#C70A80', '#FBCB0A']
+export const Colors = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51']

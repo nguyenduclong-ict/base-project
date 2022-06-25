@@ -5,19 +5,23 @@ import {
   registerModel,
   field,
 } from '@/helpers/mongo'
+import { IsArray, IsString } from 'class-validator'
 import { Schema, SchemaTypes } from 'mongoose'
 import shortid from 'shortid'
 import { Shop } from '../Shop'
 
 /** ProductAttribute */
-class ProductAttribute {
+export class ProductAttribute {
   @field(String)
+  @IsString()
   name: string
 
   @field(String)
+  @IsString()
   code: string
 
   @field({ type: SchemaTypes.Mixed, default: [] })
+  @IsArray()
   values: any[]
 }
 
@@ -42,30 +46,6 @@ const ProductVariantValueSchema = new Schema<ProductVariantValue>(
 )
 addTransformIdForSchema(ProductVariantValueSchema)
 
-/** ProductVariant */
-class ProductVariant {
-  @field(String)
-  name: string
-
-  @field(String)
-  slug: string
-
-  @field({ type: [ProductVariantValueSchema], default: [], minlength: 1 })
-  values: ProductVariantValue[]
-
-  @field({ type: Number, min: 0 })
-  price: number
-
-  @field({ type: Number, min: 0 })
-  sale_off_price: number
-}
-
-const ProductVariantSchema = new Schema<ProductVariant>(
-  getSchemaDefinition(ProductVariant),
-  { timestamps: true }
-)
-addTransformIdForSchema(ProductVariantSchema)
-
 class Product {
   @field({ type: String, required: true })
   name: string
@@ -86,17 +66,20 @@ class Product {
   @field(String)
   image: string
 
-  @field(String)
+  @field({ type: Array, of: String })
   images: string[]
 
   @field({ type: [ProductAttributeSchema], default: [] })
   attributes: ProductAttribute[]
 
-  @field({ type: [ProductVariantSchema], default: [] })
-  variants: ProductVariant[]
+  variants?: Product[]
 
+  // product is variant
   @field({ type: Boolean, default: false })
   is_variant?: boolean
+
+  @field({ type: [ProductVariantValueSchema], default: [] })
+  variant_values?: ProductVariantValue[]
 
   @field({ type: SchemaTypes.ObjectId, ref: 'Product' })
   variant_of?: Product
@@ -112,6 +95,12 @@ class Product {
 
   @field(Boolean)
   is_sale_off: boolean
+
+  @field({ type: Number, default: 0 })
+  avg_price: Number // Giá vốn, tính theo công thức bình quân gia quyền
+
+  @field({ type: Array, of: Number, default: [] })
+  avg_price_histories: Number[] // Giá vốn, tính theo công thức bình quân gia quyền
 
   @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
   shop: Shop
@@ -133,11 +122,11 @@ const ProductTools = {
 
 export function validateProduct(product: Product) {
   for (const item of product.variants) {
-    if (item.values.length === 0) {
+    if (item.variant_values.length === 0) {
       throw new Error(`Variant values must at least 1 item`)
     }
 
-    item.values.forEach((value) => {
+    item.variant_values.forEach((value) => {
       if (
         !product.attributes.find((attr) => attr.code === value.attribute_code)
       ) {

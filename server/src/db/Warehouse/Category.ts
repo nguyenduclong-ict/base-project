@@ -1,3 +1,4 @@
+import { Colors } from '@/config/constants'
 import { createSlug } from '@/helpers'
 import {
   addTransformIdForSchema,
@@ -5,6 +6,8 @@ import {
   registerModel,
   field,
 } from '@/helpers/mongo'
+import { IsString } from 'class-validator'
+import { sample } from 'lodash'
 import { Schema, SchemaTypes } from 'mongoose'
 import { Shop } from '../Shop'
 
@@ -21,7 +24,7 @@ class Category {
   @field({ type: SchemaTypes.ObjectId, ref: 'Category' })
   parent: Category
 
-  @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
+  @field({ type: SchemaTypes.ObjectId, ref: 'Shop', required: true })
   shop: Shop
 
   createdAt?: Date | undefined
@@ -43,6 +46,7 @@ CategorySchema.virtual('children', {
 
 CategorySchema.pre('save', function () {
   if (!this.slug) this.slug = createSlug(this.name)
+  if (!this.color) this.color = sample(Colors)
 })
 
 CategorySchema.pre('insertMany', function (next: any, docs: any[]) {

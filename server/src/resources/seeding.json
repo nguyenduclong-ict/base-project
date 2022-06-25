@@ -42,8 +42,7 @@
       "is_active": true,
       "is_admin": true,
       "type": "admin",
-      "roles": ["62b53a54e4ed5d1b4509dd33"],
-      "shops": ["62b5f8de61ef0c1ce106eacb", "62b5f8de61ef0c1ce106eacc"]
+      "roles": ["62b53a54e4ed5d1b4509dd33"]
     }
   ],
   "categories": [

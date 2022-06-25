@@ -21,9 +21,10 @@ class LoginBody {
 
 const handler: RequestHandler = async (req, res, next) => {
   const body: LoginBody = req.body
-  const user = await UserModel.findOne({ username: body.username }).populate(
-    'roles'
-  )
+  const user = await UserModel.findOne({ username: body.username }).populate({
+    path: 'roles',
+    populate: 'shop',
+  })
   if (!user) {
     return req.sendError({
       code: 401,

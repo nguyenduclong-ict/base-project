@@ -6,7 +6,7 @@ import {
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
 import { Role } from './Role'
-import { Shop } from './Shop'
+import { Shop, ShopModel } from './Shop'
 
 class User {
   _id?: any
@@ -18,11 +18,11 @@ class User {
   @field(String)
   password: string
 
-  @field(String)
+  @field({ type: String, required: true })
   name: string
 
-  @field({ type: String, enum: ['admin', 'customer'], default: 'user' })
-  type: 'admin' | 'customer'
+  @field(String)
+  image_url: String
 
   @field({ type: Boolean, default: false })
   is_admin: boolean
@@ -30,11 +30,10 @@ class User {
   @field({ type: Boolean, default: false })
   is_active: boolean
 
-  @field({ type: [SchemaTypes.ObjectId], ref: 'Role' })
-  roles: Role[]
+  @field({ type: [SchemaTypes.ObjectId], ref: 'Role', default: [] })
+  roles?: Role[]
 
-  @field({ type: [SchemaTypes.ObjectId], ref: 'Shop' })
-  shops: Shop[]
+  shops?: Shop[]
 
   createdAt?: Date
   updatedAt?: Date
@@ -48,6 +47,16 @@ const UserSchema = new Schema<User>(
 )
 
 addTransformIdForSchema(UserSchema)
+
+UserSchema.virtual('shops').get(function () {
+  const shopsMap: any = {}
+  this.roles.forEach((role) => {
+    if (role.shop?.id && !shopsMap[role.shop.id]) {
+      shopsMap[role.shop?.id] = role.shop
+    }
+  })
+  return Object.values(shopsMap)
+})
 
 const UserModel = registerModel('User', UserSchema)
 const UserTools = {
