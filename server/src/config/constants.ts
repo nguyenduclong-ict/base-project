@@ -11,3 +11,5 @@ export const Constants = {
   ],
   Permissions: {},
 }
+
+export const Colors = ['#37E2D5', '#590696', '#C70A80', '#FBCB0A']

@@ -2,15 +2,17 @@
   "shops": [
     {
       "_id": "62b5f8de61ef0c1ce106eacb",
-      "name": "Shop 1",
+      "name": "Vua Tay Cầm",
       "code": "1",
-      "image_url": "https://picsum.photos/id/21/200/200"
+      "image_url": "https://picsum.photos/id/21/200/200",
+      "color": "#37E2D5"
     },
     {
       "_id": "62b5f8de61ef0c1ce106eacc",
-      "name": "Shop 2",
+      "name": "Huce Student",
       "code": "2",
-      "image_url": "https://picsum.photos/id/22/200/200"
+      "image_url": "https://picsum.photos/id/22/200/200",
+      "color": "#FBCB0A"
     }
   ],
   "roles": [

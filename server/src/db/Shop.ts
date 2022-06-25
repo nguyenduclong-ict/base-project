@@ -16,6 +16,9 @@ class Shop {
   @field({ type: String })
   image_url: string
 
+  @field({ type: String })
+  color: string
+
   createdAt?: Date
   updatedAt?: Date
 }
