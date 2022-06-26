@@ -72,7 +72,7 @@ export default {
   serverMiddleware: ['~/plugins/ssr'],
 
   router: {
-    middleware: ['auth'],
+    middleware: ['auth', 'shop'],
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

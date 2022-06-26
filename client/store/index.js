@@ -3,16 +3,24 @@ export const state = () => ({
   sidebarItems: [
     {
       title: 'Dashboard',
-      route: '/',
+      route: '/dashboard',
       icon: 'el-icon-s-home',
+      shop: false
+    },
+    {
+      title: 'Thống kê',
+      route: '/{shopCode}/statistic',
+      icon: 'el-icon-data-analysis',
+      shop: true
     },
     {
       title: 'Kho hàng',
-      key: '/product',
+      key: 'warehouse',
       icon: 'el-icon-box',
+      shop: true,
       children: [
-        { title: 'Danh sách sản phẩm', route: '/product', icon: '' },
-        { title: 'Tồn kho', route: '/product/create', icon: '' },
+        { title: 'Danh sách sản phẩm', route: '/{shopCode}/product', icon: '' },
+        { title: 'Tồn kho', route: '/{shopCode}/product/create', icon: '' },
       ],
     },
   ]

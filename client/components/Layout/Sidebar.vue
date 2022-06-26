@@ -1,13 +1,72 @@
 <template>
-  <div class="sidebar overflow-hidden" :class="[sidebar && 'sidebar-opened']">
-    <div style="height: 48px" class="logo z-10">
-      <nuxt-link to="/" class="w-full h-full flex items-center justify-center">
-        <svg-icon name="nuxt" style="color: #fff; height: 32px; width: auto" />
-      </nuxt-link>
-    </div>
+  <div
+    class="sidebar overflow-hidden"
+    :class="[
+      sidebarOpened && 'sidebar-opened',
+      `--logo-height=${logoHeight}px`,
+    ]"
+  >
+    <el-popover
+      v-model="isShowSelectShop"
+      placement="right"
+      popper-class="popover-select-shop"
+      v-if="currentShop"
+    >
+      <div
+        slot="reference"
+        :style="`height: ${logoHeight}px`"
+        class="logo z-10 cursor-pointer flex items-center justify-center p-4"
+      >
+        <div v-if="sidebarOpened" class="flex flex-col items-center">
+          <Avatar
+            :src="currentShop.image_url"
+            :name="currentShop.name"
+            :color="currentShop.color"
+            :size="56"
+          />
+          <div class="text-white mt-2 truncate text-center">
+            {{ currentShop.name }}
+          </div>
+        </div>
+        <Avatar
+          v-else
+          :src="currentShop.image_url"
+          :name="currentShop.name"
+          :color="currentShop.color"
+          :size="32"
+        />
+      </div>
+
+      <el-scrollbar
+        style="max-width: 240px"
+        :wrap-style="[{ maxHeight: '500px' }]"
+        :view-style="[{ 'border-radius': '4px', overflow: 'hidden' }]"
+      >
+        <nuxt-link
+          :to="`/${shop.code}/statistic`"
+          v-for="shop in user.shops"
+          :key="shop.id"
+          class="shop-item cursor-pointer flex items-center p-2"
+          @click.native="isShowSelectShop = false"
+        >
+          <Avatar
+            :src="shop.image_url"
+            :name="shop.name"
+            :color="shop.color"
+            :size="32"
+          />
+          <span class="ml-2 text-white truncate">
+            {{ shop.name }}
+          </span>
+        </nuxt-link>
+      </el-scrollbar>
+    </el-popover>
+
     <el-scrollbar
-      style="height: calc(100vh - 48px); z-index: -1"
-      :wrap-style="[{ height: 'calc(100vh - 48px)', overflowX: 'hidden' }]"
+      :style="`height: calc(100vh - ${logoHeight}px); z-index: -1`"
+      :wrap-style="[
+        { height: `calc(100vh - ${logoHeight}px)`, overflowX: 'hidden' },
+      ]"
     >
       <el-menu
         :default-active="defaultActive"
@@ -15,6 +74,8 @@
         background-color="#364c79"
         text-color="#fff"
         active-text-color="#ffd04b"
+        :collapse="!sidebarOpened"
+        :collapse-transition="false"
       >
         <template v-for="item in items">
           <el-submenu
@@ -57,14 +118,17 @@
 <script>
 import MenuItem from './MenuItem.vue'
 import { mapState, mapMutations, mapGetters } from 'vuex'
+import Avatar from '../Common/Avatar.vue'
 
 export default {
   components: {
     ElMenuItem: MenuItem,
+    Avatar,
   },
 
   data() {
     return {
+      isShowSelectShop: false,
       defaultActive: this.$route.path,
     }
   },
@@ -76,21 +140,52 @@ export default {
   },
 
   computed: {
-    ...mapState(['sidebar', 'sidebarItems']),
+    ...mapState({
+      sidebarOpened: (state) => state.sidebar,
+    }),
+    ...mapState(['sidebarItems']),
+    ...mapState('auth', ['user']),
+    ...mapState('shop', ['currentShop']),
     ...mapGetters('permission', ['userPermissions', 'isFullPermission']),
     items() {
       const items = []
       this.sidebarItems?.forEach((item) => {
-        if (this.checkSidebarItemPermisison(item)) {
-          items.push({
+        if (this.canShowSidebarItem(item)) {
+          const copyOfItem = {
             ...item,
             children:
               item.children?.length > 0 &&
-              item.children.filter(this.checkSidebarItemPermisison),
-          })
+              item.children
+                .filter(this.canShowSidebarItem)
+                .map((child) => ({ ...child })),
+          }
+
+          if (this.currentShop) {
+            if (copyOfItem.route) {
+              copyOfItem.route = copyOfItem.route.replaceAll(
+                '{shopCode}',
+                this.currentShop.code
+              )
+            }
+            if (copyOfItem.children?.length > 0) {
+              copyOfItem.children.forEach((child) => {
+                if (child.route) {
+                  child.route = child.route.replaceAll(
+                    '{shopCode}',
+                    this.currentShop.code
+                  )
+                }
+              })
+            }
+          }
+
+          items.push(copyOfItem)
         }
       })
       return items
+    },
+    logoHeight() {
+      return this.currentShop ? (this.sidebarOpened ? 128 : 48) : 0
     },
   },
 
@@ -103,7 +198,10 @@ export default {
         this.TOGGLE_SIDEBAR(true)
       }
     },
-    checkSidebarItemPermisison(item) {
+    canShowSidebarItem(item) {
+      if (typeof item.shop === 'boolean') {
+        return !!this.currentShop === item.shop
+      }
       return (
         !item.permission ||
         this.isFullPermission ||
@@ -123,27 +221,43 @@ export default {
 </script>
 
 <style lang="scss">
+.popover-select-shop {
+  background-color: #364c79;
+  padding: 0px;
+  .popper__arrow::after {
+    border-right-color: #364c79 !important;
+  }
+
+  .shop-item:hover {
+    background-color: rgb(43, 61, 97) !important;
+  }
+}
+
 $sidebar-width: 240px;
+$sidebar-small: 64px;
 
 .sidebar {
+  transition: 0.3s;
+  width: $sidebar-small;
+  background: #364c79;
+
   .logo {
     background: #364c79;
     // box-shadow: 0 2px 2px 0 rgba(#141c2d, 0.14),
     //   0 3px 1px -2px rgba(#141c2d, 0.12), 0 1px 5px 0 rgba(#141c2d, 0.2);
   }
 
-  transition: 0.3s;
-
-  margin-left: -1 * $sidebar-width;
+  &.el-menu--collapse {
+    width: $sidebar-small;
+  }
 
   &.sidebar-opened {
     margin-left: 0px;
+    width: $sidebar-width;
   }
 
-  width: $sidebar-width;
   .el-menu-sidebar {
-    width: $sidebar-width;
-    min-height: 100vh;
+    min-height: calc(100vh - var(--logo-height));
     border-right: solid 1px rgb(54, 76, 121) !important;
   }
 
@@ -172,26 +286,18 @@ $sidebar-width: 240px;
 
 @media screen and (max-width: 786px) {
   .sidebar {
-    #toogle-sidebar-button {
-      display: block;
-      position: absolute;
-      bottom: 128px;
-      left: $sidebar-width;
-      transition: 0.3s;
-      color: white;
-      background: #409eff;
-      padding: 4px;
-      border-radius: 0 4px 4px 0;
-      z-index: 1;
-    }
-
+    margin-left: -1 * $sidebar-width;
     top: 0px;
     position: fixed;
     left: -1 * $sidebar-width;
-    transition: 0.5s;
+    width: $sidebar-width;
 
     &.sidebar-opened {
       left: 0;
+    }
+
+    .el-menu-sidebar {
+      width: $sidebar-width;
     }
   }
 }

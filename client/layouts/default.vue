@@ -3,10 +3,9 @@
     <Sidebar id="sidebar" />
     <div class="overlay" v-if="sidebar" @click="TOGGLE_SIDEBAR()"></div>
 
-    <div>
+    <div id="content">
       <Header />
       <el-scrollbar
-        id="content"
         :wrap-style="[{ maxHeight: 'calc(100vh - 48px)', overflowX: 'hidden' }]"
       >
         <nuxt />
