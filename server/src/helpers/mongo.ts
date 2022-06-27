@@ -1,6 +1,12 @@
-import _ from 'lodash'
-import { FilterQuery, Model, Schema, SchemaDefinitionProperty } from 'mongoose'
 import { connection } from '@/config/connection'
+import _ from 'lodash'
+import {
+  FilterQuery,
+  Model,
+  Schema,
+  SchemaDefinitionProperty,
+  Types,
+} from 'mongoose'
 
 export interface Entity {
   _id?: any
@@ -233,3 +239,20 @@ export const parseJSON = (value: any) => {
   } catch (error) {}
   return value
 }
+
+export const objectIdToString = (id: Types.ObjectId | string | any): string => {
+  // objectid
+  if (id === null) return id
+  if (id instanceof Types.ObjectId) return id.toHexString()
+  if (typeof id === 'string') return id
+
+  // object contains objectid, example: shop {_id}
+  if (id._id) id = id._id
+  if (id.id) id = id.id
+  if (id instanceof Types.ObjectId) return id.toHexString()
+  if (typeof id === 'string') return id
+  return String(id)
+}
+
+export const compareObjectId = (id1: any, id2: any) =>
+  objectIdToString(id1) === objectIdToString(id2)

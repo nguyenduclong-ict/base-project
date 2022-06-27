@@ -1,5 +1,5 @@
 import { UserModel } from '@/db'
-import { verifyToken } from '@/helpers'
+import { compareObjectId, verifyToken } from '@/helpers'
 import consola from 'consola'
 import { RequestHandler } from 'express'
 import { get } from 'lodash'
@@ -16,7 +16,7 @@ export const getUser: RequestHandler = async (req, res, next) => {
       if (tokenData.userId) {
         const user = await UserModel.findOne({
           _id: tokenData.userId,
-        }).populate({ path: 'roles', populate: 'shop' })
+        }).populate({ path: 'roles' })
         req.user = user.toJSON() as any
       }
     } catch (error) {
@@ -43,7 +43,9 @@ export const isShopMember = function (shopIdPath?: string): RequestHandler {
         get(req.query, 'shop') ||
         get(req.body, 'shop')
 
-    const shop = req.user.shops.find((shop) => shop.id === shopId)
+    const shop = req.user.roles.find((role) =>
+      compareObjectId(role.shop, shopId)
+    )
 
     if (!shop) {
       return req.sendError({

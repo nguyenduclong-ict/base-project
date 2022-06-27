@@ -7,7 +7,7 @@ import {
 import { Schema } from 'mongoose'
 
 class Shop {
-  _id?: any
+  // _id?: any
   id?: any
 
   @field(String)

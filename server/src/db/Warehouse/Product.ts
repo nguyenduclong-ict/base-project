@@ -118,9 +118,31 @@ addTransformIdForSchema(ProductSchema)
 const ProductModel = registerModel('Product', ProductSchema)
 const ProductTools = {
   model: ProductModel,
+
+  generateProductVariantName(
+    parentName: string,
+    variantValues: ProductVariantValue[]
+  ) {
+    return (
+      parentName +
+      ' ' +
+      variantValues.map((item) => item.attribute_value).join(', ')
+    )
+  },
+
+  generateProductVariantSlug(
+    parentSlug: string,
+    variantValues: ProductVariantValue[]
+  ) {
+    return createSlug(
+      parentSlug +
+        '-' +
+        variantValues.map((item) => item.attribute_value).join('-')
+    )
+  },
 }
 
-export function validateProduct(product: Product) {
+export function validateVariants(product: Product) {
   for (const item of product.variants) {
     if (item.variant_values.length === 0) {
       throw new Error(`Variant values must at least 1 item`)

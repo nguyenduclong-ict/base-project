@@ -1,15 +1,15 @@
 import {
   addTransformIdForSchema,
+  field,
   getSchemaDefinition,
   registerModel,
-  field,
 } from '@/helpers/mongo'
-import { Schema, SchemaTypes } from 'mongoose'
+import { Schema, SchemaTypes, Types } from 'mongoose'
 import { Role } from './Role'
-import { Shop, ShopModel } from './Shop'
+import { Shop } from './Shop'
 
 class User {
-  _id?: any
+  _id?: Types.ObjectId
   id?: any
 
   @field(String)
@@ -47,16 +47,6 @@ const UserSchema = new Schema<User>(
 )
 
 addTransformIdForSchema(UserSchema)
-
-UserSchema.virtual('shops').get(function () {
-  const shopsMap: any = {}
-  this.roles.forEach((role) => {
-    if (role.shop?.id && !shopsMap[role.shop.id]) {
-      shopsMap[role.shop?.id] = role.shop
-    }
-  })
-  return Object.values(shopsMap)
-})
 
 const UserModel = registerModel('User', UserSchema)
 const UserTools = {
