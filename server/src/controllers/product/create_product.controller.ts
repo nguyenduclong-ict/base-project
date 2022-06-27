@@ -122,15 +122,21 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
 
   try {
     // create parent product
-    const product = await ProductModel.create({
-      image: req.body.image,
-      images: req.body.images,
-      description: req.body.description,
-      shop: req.body.shop,
-      slug: req.body.slug,
-      price: req.body.price,
-      sale_off_price: req.body.sale_off_price,
-    })
+    const [product] = await ProductModel.create(
+      [
+        {
+          image: req.body.image,
+          images: req.body.images,
+          description: req.body.description,
+          attributes: req.body.attributes,
+          shop: req.body.shop,
+          slug: req.body.slug,
+          price: req.body.price,
+          sale_off_price: req.body.sale_off_price,
+        },
+      ],
+      { session }
+    )
 
     const isProductHasVariant =
       req.body.has_variants &&
@@ -172,7 +178,8 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
             price: variant.price,
             sale_off_price: variant.sale_off_price,
           }
-        })
+        }),
+        { session }
       )
 
       product.variants = variants
