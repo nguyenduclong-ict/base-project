@@ -6,7 +6,8 @@
   "scripts": {
     "dev:client": "cd client && npm run dev",
     "dev:server": "cd server && npm run dev",
-    "dc:up": "cd server && npm run dc:up"
+    "dc:up": "cd server && npm run dc:up",
+    "dc:down": "cd server && npm run dc:down"
   },
   "author": "Nguyen Duc Long",
   "license": "ISC"

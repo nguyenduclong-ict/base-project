@@ -221,30 +221,30 @@ export default {
 </script>
 
 <style lang="scss">
+$sidebar-width: 240px;
+$sidebar-small: 64px;
+$bg-color: #364c79;
+// $bg-color: #fff;
+
 .popover-select-shop {
-  background-color: #364c79;
+  background: $bg-color;
   padding: 0px;
   .popper__arrow::after {
-    border-right-color: #364c79 !important;
+    border-right-color: $bg-color !important;
   }
 
   .shop-item:hover {
-    background-color: rgb(43, 61, 97) !important;
+    background-color: darken($color: $bg-color, $amount: 10) !important;
   }
 }
-
-$sidebar-width: 240px;
-$sidebar-small: 64px;
 
 .sidebar {
   transition: 0.3s;
   width: $sidebar-small;
-  background: #364c79;
+  background: $bg-color;
 
   .logo {
-    background: #364c79;
-    // box-shadow: 0 2px 2px 0 rgba(#141c2d, 0.14),
-    //   0 3px 1px -2px rgba(#141c2d, 0.12), 0 1px 5px 0 rgba(#141c2d, 0.2);
+    background: $bg-color;
   }
 
   &.el-menu--collapse {
@@ -258,7 +258,7 @@ $sidebar-small: 64px;
 
   .el-menu-sidebar {
     min-height: calc(100vh - var(--logo-height));
-    border-right: solid 1px rgb(54, 76, 121) !important;
+    border-right: solid 1px $bg-color !important;
   }
 
   .el-submenu__title,
@@ -280,7 +280,7 @@ $sidebar-small: 64px;
 
   .el-menu-item:hover,
   .el-menu-item.is-active {
-    background-color: rgb(43, 61, 97) !important;
+    background-color: darken($color: $bg-color, $amount: 10) !important;
   }
 }
 
