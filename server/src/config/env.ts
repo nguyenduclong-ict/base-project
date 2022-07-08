@@ -11,8 +11,9 @@ export const ENV = {
   MONGO_AUTH_SOURCE: process.env.MONGO_AUTH_SOURCE,
   MONGO_REPLICASET: process.env.MONGO_REPLICASET,
   MONGO_PORT: envTool.parseNumber(process.env.MONGO_PORT) || 27017,
-  MINIO_ACCESS_KEY: process.env.MINIO_ACCESS_KEY,
-  MINIO_SECRET_KEY: process.env.MINIO_SECRET_KEY,
+  S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+  S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+  S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
   JWT_SECERT: process.env.JWT_SECERT,
 }
 

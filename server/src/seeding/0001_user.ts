@@ -1,8 +1,9 @@
 import { RoleModel, UserModel } from '@/db'
+import { getJsonResource } from '@/helpers'
 import { hashPassword } from '@/helpers/scrypt'
-import seedingJson from '@/resources/seeding.json'
 
 export default async function () {
+  const seedingJson = await getJsonResource('seeding.json')
   await RoleModel.create(seedingJson.roles)
 
   const adminPasswordHashed = await hashPassword(
@@ -10,7 +11,7 @@ export default async function () {
   )
 
   await UserModel.create(
-    seedingJson.users.map((user) => ({
+    seedingJson.users.map((user: any) => ({
       ...user,
       password: user.password || adminPasswordHashed,
     }))

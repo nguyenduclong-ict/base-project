@@ -3,8 +3,16 @@ import { RoleModel } from '@/db'
 import consola from 'consola'
 import globby from 'globby'
 import path from 'path'
+import fs from 'fs'
 
 async function seeding() {
+  // check seeing file exists
+
+  if (!fs.existsSync(path.join(__dirname, '../resources/seeding.json'))) {
+    consola.error('please create "src/resources/seeding.json" file')
+    process.exit(1)
+  }
+
   try {
     // drop all collection
     consola.success(`start seeding`)

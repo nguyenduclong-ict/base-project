@@ -43,9 +43,9 @@ export const isShopMember = function (shopIdPath?: string): RequestHandler {
         get(req.query, 'shop') ||
         get(req.body, 'shop')
 
-    const shop = req.user.roles.find((role) =>
-      compareObjectId(role.shop, shopId)
-    )
+    const shop =
+      shopId &&
+      req.user.roles.find((role) => compareObjectId(role.shop, shopId))
 
     if (!shop) {
       return req.sendError({

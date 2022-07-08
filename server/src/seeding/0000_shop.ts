@@ -1,6 +1,7 @@
 import { ShopModel } from '@/db'
-import seedingJson from '@/resources/seeding.json'
+import { getJsonResource } from '@/helpers'
 
 export default async function () {
+  const seedingJson = await getJsonResource('seeding.json')
   await ShopModel.create(seedingJson.shops)
 }

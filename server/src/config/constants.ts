@@ -1,3 +1,5 @@
+import permissions from './permission.json'
+
 export const Constants = {
   ProductAttributes: [
     {
@@ -9,12 +11,12 @@ export const Constants = {
       name: 'Size',
     },
   ],
-  Permissions: {
-    CREATE_PRODUCT: 'create_product',
-    UPDATE_PRODUCT: 'update_product',
-    DELETE_PRODUCT: 'delete_product',
-    VIEW_PRODUCT: 'view_product',
-  },
+  Permissions: Object.keys(permissions).reduce((ps, key) => {
+    return {
+      ...ps,
+      [key]: key.toLowerCase(),
+    }
+  }, {} as { [k in keyof typeof permissions]: string }),
 }
 
 export const Colors = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51']
