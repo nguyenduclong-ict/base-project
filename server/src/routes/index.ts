@@ -1,11 +1,9 @@
-import { Router } from 'express'
-import productRoutes from './product'
-import categoryRoutes from './category'
-import authRoutes from './auth'
 import { sendError } from '@/helpers'
 import { isAuthenticated } from '@/middleware'
-import { connection } from '@/config'
-import { CategoryModel } from '@/database'
+import { Router } from 'express'
+import authRoutes from './auth'
+import categoryRoutes from './category'
+import productRoutes from './product'
 
 const router = Router()
 router.use((req, res, next) => {

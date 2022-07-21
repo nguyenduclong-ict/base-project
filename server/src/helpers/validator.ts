@@ -1,7 +1,9 @@
 import 'reflect-metadata'
 import { plainToClass } from 'class-transformer'
-import { validate, ValidationError } from 'class-validator'
+import { validate, ValidationError, getMetadataStorage } from 'class-validator'
 import { RequestHandler } from 'express'
+
+const metaDataStorage = getMetadataStorage()
 
 function getErrorMessage(error: ValidationError, path: string = ''): string {
   let message = ''
@@ -18,7 +20,16 @@ export function createValidate(
   entityClass: any,
   target: 'body' | 'query' | 'params'
 ): RequestHandler {
-  return async function (req, res, next) {
+  const m = metaDataStorage.getTargetValidationMetadatas(
+    entityClass,
+    entityClass.constructor.name,
+    true,
+    false
+  )
+
+  const dto = metaDataStorage.groupByPropertyName(m)
+
+  const FunctionValidator: RequestHandler = async (req, res, next) => {
     const raw = req[target]
     const data = plainToClass(entityClass, raw)
 
@@ -36,4 +47,9 @@ export function createValidate(
 
     next()
   }
+
+  ;(FunctionValidator as any).dto = dto
+  ;(FunctionValidator as any).target = target
+
+  return FunctionValidator
 }
