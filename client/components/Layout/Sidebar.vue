@@ -24,7 +24,7 @@
             :color="currentShop.color"
             :size="56"
           />
-          <div class="text-white mt-2 truncate text-center">
+          <div class="mt-2 truncate text-center">
             {{ currentShop.name }}
           </div>
         </div>
@@ -71,9 +71,9 @@
       <el-menu
         :default-active="defaultActive"
         class="el-menu-sidebar"
-        background-color="#364c79"
-        text-color="#fff"
-        active-text-color="#ffd04b"
+        background-color="#f7f7f7"
+        text-color="#444"
+        active-text-color="#000"
         :collapse="!sidebarOpened"
         :collapse-transition="false"
       >
@@ -223,8 +223,8 @@ export default {
 <style lang="scss">
 $sidebar-width: 240px;
 $sidebar-small: 64px;
-$bg-color: #364c79;
-// $bg-color: #fff;
+$bg-color: #f7f7f7;
+$text-color: #444;
 
 .popover-select-shop {
   background: $bg-color;
@@ -242,6 +242,8 @@ $bg-color: #364c79;
   transition: 0.3s;
   width: $sidebar-small;
   background: $bg-color;
+  border-right: 1px solid #dedede;
+  box-shadow: 0 1px 6px 1px rgb(0 0 0 / 10%);
 
   .logo {
     background: $bg-color;
@@ -258,7 +260,7 @@ $bg-color: #364c79;
 
   .el-menu-sidebar {
     min-height: calc(100vh - var(--logo-height));
-    border-right: solid 1px $bg-color !important;
+    border-right: none;
   }
 
   .el-submenu__title,
@@ -275,12 +277,18 @@ $bg-color: #364c79;
 
   .el-submenu__title i,
   .el-menu-item:not(.is-active) i {
-    color: #fff;
+    color: $text-color;
   }
 
   .el-menu-item:hover,
   .el-menu-item.is-active {
-    background-color: darken($color: $bg-color, $amount: 10) !important;
+    background-color: lighten($color: #339ef0, $amount: 33) !important;
+    // background-color: darken($color: $bg-color, $amount: 10) !important;
+  }
+
+  .el-menu-item.is-active {
+    border-right: solid 2px #339ef0;
+    font-weight: bold;
   }
 }
 

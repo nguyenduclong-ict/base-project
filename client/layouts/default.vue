@@ -41,6 +41,8 @@ export default {
 
   #content {
     flex: 1;
+
+    background: #f2f4f7;
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="app-header shadow-base">
+  <div class="app-header shadow-base bg-white">
     <div
       class="toggle-button flex justify-center items-center"
       @click="TOGGLE_SIDEBAR()"
