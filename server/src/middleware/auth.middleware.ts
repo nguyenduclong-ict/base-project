@@ -1,4 +1,4 @@
-import { UserModel } from '@/db'
+import { UserModel } from '@/database'
 import { compareObjectId, verifyToken } from '@/helpers'
 import consola from 'consola'
 import { RequestHandler } from 'express'

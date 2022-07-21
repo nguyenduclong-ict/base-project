@@ -4,7 +4,7 @@ import {
   ProductModel,
   ProductTools,
   validateVariants,
-} from '@/db'
+} from '@/database'
 import { createSlug } from '@/helpers'
 import { createValidate } from '@/helpers/validator'
 import { Type } from 'class-transformer'

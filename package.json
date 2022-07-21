@@ -4,11 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:client": "cd client && npm run dev",
     "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
     "dc:up": "cd server && npm run dc:up",
-    "dc:down": "cd server && npm run dc:down"
+    "dc:down": "cd server && npm run dc:down",
+    "dev": "concurrently -n \"server,client\" -c \"bgBlue.bold,bgGreen.bold\" \"npm:dev:server\" \"npm:dev:client\""
   },
   "author": "Nguyen Duc Long",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.3.0"
+  }
 }

@@ -5,7 +5,7 @@ import authRoutes from './auth'
 import { sendError } from '@/helpers'
 import { isAuthenticated } from '@/middleware'
 import { connection } from '@/config'
-import { CategoryModel } from '@/db'
+import { CategoryModel } from '@/database'
 
 const router = Router()
 router.use((req, res, next) => {

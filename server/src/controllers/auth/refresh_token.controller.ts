@@ -1,4 +1,4 @@
-import { UserModel } from '@/db'
+import { UserModel } from '@/database'
 import { generateLoginToken, sendError, verifyToken } from '@/helpers'
 import { createValidate } from '@/helpers/validator'
 import { IsString } from 'class-validator'

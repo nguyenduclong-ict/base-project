@@ -10,6 +10,6 @@ export function createSlug(text: string) {
 }
 
 export async function getJsonResource(name: string) {
-  const raw = await fs.readFile(path.join(__dirname, '../resources', name))
+  const raw = await fs.readFile(path.join(process.cwd(), 'resources', name))
   return JSON.parse(raw as unknown as string)
 }

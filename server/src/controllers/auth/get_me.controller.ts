@@ -1,4 +1,4 @@
-import { ShopModel } from '@/db'
+import { ShopModel } from '@/database'
 import { objectIdToString } from '@/helpers'
 import { RequestHandler } from 'express'
 import { omit } from 'lodash'

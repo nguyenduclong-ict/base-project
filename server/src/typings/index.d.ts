@@ -1,5 +1,5 @@
 import { sendError } from "@/helpers";
-import { User } from "../db";
+import { User } from "../database";
 
 declare global {
     namespace Express {

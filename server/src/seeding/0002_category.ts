@@ -1,4 +1,4 @@
-import { CategoryModel } from '@/db'
+import { CategoryModel } from '@/database'
 import { getJsonResource } from '@/helpers'
 import { omit } from 'lodash'
 
@@ -14,3 +14,5 @@ export default async function () {
     )
   }
 }
+
+export const dropCollections = ['categories']

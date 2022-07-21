@@ -1,4 +1,4 @@
-import { RoleModel, UserModel } from '@/db'
+import { RoleModel, UserModel } from '@/database'
 import { getJsonResource } from '@/helpers'
 import { hashPassword } from '@/helpers/scrypt'
 
@@ -17,3 +17,5 @@ export default async function () {
     }))
   )
 }
+
+export const dropCollections = ['roles', 'users']

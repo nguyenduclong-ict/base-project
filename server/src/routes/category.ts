@@ -1,4 +1,4 @@
-import { CategoryModel } from '@/db'
+import { CategoryModel } from '@/database'
 import { registerRestApi } from '@/helpers'
 import { isAuthenticated, isShopMember } from '@/middleware'
 import { Router } from 'express'

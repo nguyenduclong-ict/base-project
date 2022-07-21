@@ -1,4 +1,4 @@
-import { UserModel } from '@/db'
+import { UserModel } from '@/database'
 import {
   comparePassword,
   generateLoginToken,
