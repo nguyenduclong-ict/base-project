@@ -32,13 +32,33 @@ export function setUpSwagger(app: Express) {
   }
 
   routes.forEach((route) => {
-    const item: any = {}
+    const item: any = {
+      parameters: [],
+    }
     route.stack.forEach((stack: any) => {
       if (stack.name === 'FunctionValidator') {
         const h = stack.handle
         // console.log(h.dto)
         if (h.target === 'query') {
           item.query = item.query || {}
+        }
+
+        if (h.target === 'params') {
+          Object.keys(h.dto).forEach((key) => {
+            item.parameters.push({
+              in: 'params',
+              name: key,
+            })
+          })
+        }
+
+        if (h.target === 'query') {
+          Object.keys(h.dto).forEach((key) => {
+            item.parameters.push({
+              in: 'query',
+              name: key,
+            })
+          })
         }
 
         if (h.target === 'body') {
@@ -50,13 +70,14 @@ export function setUpSwagger(app: Express) {
               properties: {},
             },
           }
-          item.parameters = [body]
           Object.keys(h.dto).forEach((key) => {
             body.schema.properties[key] = {}
           })
+          item.parameters.push(body)
         }
       }
     })
+
     swaggerDocuments.paths[route.path] =
       swaggerDocuments.paths[route.path] || {}
     Object.assign(swaggerDocuments.paths[route.path], {

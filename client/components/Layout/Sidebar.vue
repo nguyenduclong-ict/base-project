@@ -55,7 +55,7 @@
             :color="shop.color"
             :size="32"
           />
-          <span class="ml-2 text-white truncate">
+          <span class="ml-2 truncate">
             {{ shop.name }}
           </span>
         </nuxt-link>
@@ -225,12 +225,17 @@ $sidebar-width: 240px;
 $sidebar-small: 64px;
 $bg-color: #f7f7f7;
 $text-color: #444;
+$active-color: #339ef0;
 
 .popover-select-shop {
   background: $bg-color;
   padding: 0px;
   .popper__arrow::after {
     border-right-color: $bg-color !important;
+  }
+
+  .shop-item {
+    color: $text-color;
   }
 
   .shop-item:hover {
@@ -280,15 +285,27 @@ $text-color: #444;
     color: $text-color;
   }
 
+  .el-submenu__title:hover,
   .el-menu-item:hover,
   .el-menu-item.is-active {
-    background-color: lighten($color: #339ef0, $amount: 33) !important;
-    // background-color: darken($color: $bg-color, $amount: 10) !important;
+    background-color: lighten($color: $active-color, $amount: 33) !important;
   }
 
   .el-menu-item.is-active {
-    border-right: solid 2px #339ef0;
+    border-right: solid 2px $active-color;
     font-weight: bold;
+  }
+}
+
+.el-menu--popup {
+  .el-submenu__title i,
+  .el-menu-item:not(.is-active) i {
+    color: $text-color;
+  }
+
+  .el-menu-item:hover,
+  .el-menu-item.is-active {
+    background-color: lighten($color: $active-color, $amount: 33) !important;
   }
 }
 
