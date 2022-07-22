@@ -38,6 +38,7 @@ export const isShopMember = function (shopIdPath?: string): RequestHandler {
       ? get(req, shopIdPath)
       : get(req.params, 'shop_id') ||
         get(req.query, 'shop_id') ||
+        get(req.query?.query, 'shop_id') ||
         get(req.body, 'shop_id') ||
         get(req.params, 'shop') ||
         get(req.query, 'shop') ||

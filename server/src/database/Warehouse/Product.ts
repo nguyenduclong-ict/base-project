@@ -97,10 +97,10 @@ class Product {
   is_sale_off: boolean
 
   @field({ type: Number, default: 0 })
-  avg_price: Number // Giá vốn, tính theo công thức bình quân gia quyền
+  avg_price: number // Giá vốn, tính theo công thức bình quân gia quyền
 
   @field({ type: Array, of: Number, default: [] })
-  avg_price_histories: Number[] // Giá vốn, tính theo công thức bình quân gia quyền
+  avg_price_histories: [number, number] // Giá vốn trước đó, tính theo công thức bình quân gia quyền, gồm [tử số, mẫu số]
 
   @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
   shop: Shop
