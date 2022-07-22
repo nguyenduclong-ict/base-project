@@ -25,3 +25,12 @@ body {
   width: 16px;
   height: 16px;
 }
+
+.el-table__header-wrapper th.el-table__cell {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.el-loading-spinner svg {
+  margin-left: auto;
+  margin-right: auto;
+}

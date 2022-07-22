@@ -1,11 +1,14 @@
 <template>
   <div id="layout-default">
-    <Sidebar id="sidebar" />
+    <div id="sidebar-wrapper">
+      <Sidebar id="sidebar" />
+    </div>
     <div class="overlay" v-if="sidebar" @click="TOGGLE_SIDEBAR()"></div>
 
-    <div id="content">
+    <div id="content" :style="{ maxWidth: `calc(100vw - ${sidebarWidth}px)` }">
       <Header />
       <el-scrollbar
+        id="content-scrollbar"
         :wrap-style="[{ maxHeight: 'calc(100vh - 48px)', overflowX: 'hidden' }]"
       >
         <nuxt />
@@ -26,23 +29,45 @@ export default {
   methods: {
     ...mapMutations(['TOGGLE_SIDEBAR']),
   },
+  data() {
+    return {
+      sidebarWidth: 0,
+      sidebarObserver: null,
+    }
+  },
+  mounted() {
+    const observer = new ResizeObserver((entries) => {
+      let rect = entries[0].contentRect
+      this.sidebarWidth = rect.width
+    })
+    observer.observe(this.$el.querySelector('#sidebar-wrapper'))
+    this.sidebarObserver = observer
+  },
+
+  beforeDestroy() {
+    this.sidebarObserver.disconnect()
+  },
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #layout-default {
   display: flex;
   height: 100vh;
 
-  #sidebar {
+  #sidebar-wrapper {
     flex: none;
     z-index: 2;
   }
 
   #content {
     flex: 1;
+    background: #fafafa;
+    position: relative;
 
-    background: #f2f4f7;
+    #content-scrollbar {
+      margin-top: 4px;
+    }
   }
 }
 

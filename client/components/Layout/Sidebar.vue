@@ -63,7 +63,7 @@
     </el-popover>
 
     <el-scrollbar
-      :style="`height: calc(100vh - ${logoHeight}px); z-index: -1`"
+      :style="`height: calc(100vh - ${logoHeight}px);`"
       :wrap-style="[
         { height: `calc(100vh - ${logoHeight}px)`, overflowX: 'hidden' },
       ]"
