@@ -13,17 +13,21 @@
       </el-form-item>
 
       <el-form-item label="Mô tả sản phẩm">
-        <el-input type="textarea" v-model="form.description"></el-input>
+        <el-input v-model="form.description" type="textarea"></el-input>
       </el-form-item>
 
-      <el-form-item label="Hình ảnh"></el-form-item>
+      <el-form-item label="Hình ảnh">
+        <MediaSelect />
+      </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import MediaSelect from '~/components/Common/MediaSelect.vue'
 export default {
+  components: { MediaSelect },
   data() {
     return {
       form: {

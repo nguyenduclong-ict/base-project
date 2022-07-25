@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import qs from 'qs'
+import * as qs from 'qs'
 import pick from 'lodash/pick'
 export default {
   props: {
@@ -63,11 +63,6 @@ export default {
     },
   },
 
-  created() {
-    this.config.payload = this.config.payload || {}
-    this.fetchData()
-  },
-
   watch: {
     dataSource: {
       immediate: true,
@@ -87,6 +82,11 @@ export default {
     },
   },
 
+  created() {
+    this.config.payload = this.config.payload || {}
+    this.fetchData()
+  },
+
   methods: {
     async fetchData(overridePayload = {}) {
       if (!this.config.endpoint) return false
@@ -98,14 +98,13 @@ export default {
 
         const response = await this.$axios.$get(
           this.config.endpoint +
-            '?' +
             qs.stringify(
               {
                 ...payload,
                 ...overridePayload,
                 ...this.pager,
               },
-              { encode: false }
+              { encode: false, addQueryPrefix: true }
             )
         )
 

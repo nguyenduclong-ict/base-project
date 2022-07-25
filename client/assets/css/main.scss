@@ -34,3 +34,22 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+
+.el-dialog {
+  .el-dialog__footer {
+    background-color: #f6f6f9;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-top: solid 1px #e5e7eb;
+  }
+  .el-dialog__header {
+    background-color: #f6f6f9;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-bottom: solid 1px #e5e7eb;
+  }
+
+  .el-dialog__headerbtn {
+    top: 16px;
+  }
+}
