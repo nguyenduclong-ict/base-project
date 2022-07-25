@@ -1,5 +1,6 @@
 import { connection } from '@/config'
 import {
+  MediaImage,
   ProductAttribute,
   ProductModel,
   ProductTools,
@@ -13,6 +14,7 @@ import {
   IsArray,
   IsBoolean,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   ValidateNested,
@@ -45,9 +47,13 @@ class Variant {
   @IsOptional()
   slug?: string
 
-  @IsString()
+  @IsObject()
   @IsOptional()
-  image?: string
+  image?: MediaImage
+
+  @IsObject({ each: true })
+  @IsOptional()
+  images?: MediaImage[]
 
   @IsNumber()
   sale_off_price: number

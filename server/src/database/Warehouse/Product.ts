@@ -1,13 +1,14 @@
 import { createSlug } from '@/helpers'
 import {
   addTransformIdForSchema,
+  field,
   getSchemaDefinition,
   registerModel,
-  field,
 } from '@/helpers/mongo'
 import { IsArray, IsString } from 'class-validator'
 import { Schema, SchemaTypes } from 'mongoose'
 import shortid from 'shortid'
+import { MediaImage } from '../Media'
 import { Shop } from '../Shop'
 
 /** ProductAttribute */
@@ -63,11 +64,11 @@ class Product {
   @field(String)
   description: string
 
-  @field(String)
-  image: string
+  @field({ type: SchemaTypes.Mixed })
+  image: MediaImage
 
-  @field({ type: Array, of: String })
-  images: string[]
+  @field({ type: SchemaTypes.Mixed })
+  images: MediaImage[]
 
   @field({ type: [ProductAttributeSchema], default: [] })
   attributes: ProductAttribute[]

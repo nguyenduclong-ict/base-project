@@ -6,7 +6,7 @@ import {
   getSchemaDefinition,
   registerModel,
 } from '@/helpers/mongo'
-import { model, Schema, SchemaTypes } from 'mongoose'
+import { Schema, SchemaTypes } from 'mongoose'
 import { Shop } from './Shop'
 import { User } from './User'
 
@@ -88,4 +88,11 @@ MediaSchema.set('toJSON', {
 const MediaModel = registerModel('Media', MediaSchema)
 const MediaTools = { model: MediaModel }
 
-export { Media, MediaSchema, MediaModel, MediaTools }
+interface MediaImage {
+  url: string
+  name?: string
+  alt?: string
+  dimension?: string
+}
+
+export { Media, MediaSchema, MediaModel, MediaTools, MediaImage }
