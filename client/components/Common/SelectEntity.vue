@@ -81,8 +81,6 @@ export default {
     },
 
     async fetchData() {
-      console.log('fetchData')
-
       try {
         const queryString = qs.stringify(
           {
@@ -95,9 +93,7 @@ export default {
           this.config.endpoint + '?' + queryString
         )
 
-        console.log(response)
-
-        this.data.push(...response)
+        this.data = response
       } catch (error) {
         console.log('fetchData Error', error)
       }

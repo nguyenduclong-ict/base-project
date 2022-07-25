@@ -7,7 +7,7 @@ import {
   SchemaDefinitionProperty,
   Types,
 } from 'mongoose'
-
+import { ObjectId } from 'mongodb'
 export interface Entity {
   _id?: any
   id?: any
@@ -256,3 +256,5 @@ export const objectIdToString = (id: Types.ObjectId | string | any): string => {
 
 export const compareObjectId = (id1: any, id2: any) =>
   objectIdToString(id1) === objectIdToString(id2)
+
+export const createObjectId = () => new ObjectId().toString()

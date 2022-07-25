@@ -27,6 +27,7 @@ export function sendError(
 
 export const listEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
+    console.log('listEntityController')
     try {
       let query: any = {}
 
