@@ -1,7 +1,12 @@
 <template>
   <div class="p-5">
     <div class="pb-2 flex">
-      <div class="flex-1"></div>
+      <div class="flex-1">
+        <el-page-header
+          content="Thêm sản phẩm"
+          @back="() => $router.back()"
+        ></el-page-header>
+      </div>
       <div>
         <el-button type="info" @click="$router.back()">Hủy</el-button>
         <el-button icon="el-icon-finished" type="success">Lưu</el-button>
@@ -117,6 +122,20 @@ import MediaSelect from '~/components/Common/MediaSelect.vue'
 import { uniqueId } from '~/utils'
 export default {
   components: { MediaSelect },
+
+  meta: {
+    breadcrumb: [
+      {
+        path: '/{shopCode}/product',
+        name: 'Sản phẩm',
+      },
+      {
+        path: '/{shopCode}/product/create',
+        name: 'Thêm sản phẩm',
+      },
+    ],
+  },
+
   data() {
     return {
       form: {

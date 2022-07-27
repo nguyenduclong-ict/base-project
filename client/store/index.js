@@ -1,5 +1,6 @@
 export const state = () => ({
   sidebar: true,
+  breadcrumb: [],
   sidebarItems: [
     {
       title: 'Dashboard',
@@ -49,4 +50,7 @@ export const mutations = {
   TOGGLE_SIDEBAR(state, value) {
     state.sidebar = value ?? !state.sidebar
   },
+  SET_BREADCRUMB(state, value) {
+    state.breadcrumb = value
+  }
 }
