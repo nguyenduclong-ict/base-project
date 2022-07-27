@@ -1,6 +1,6 @@
 <template>
   <div class="data-table">
-    <el-table border class="data-table" :data="data" ref="table">
+    <el-table ref="table" border class="data-table" :data="data">
       <template v-for="col in columns">
         <slot v-if="col.type === 'slot'" :name="`column-${col.prop}`"></slot>
         <el-table-column

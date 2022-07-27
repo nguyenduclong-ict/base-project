@@ -53,3 +53,24 @@ body {
     top: 16px;
   }
 }
+
+// Button
+.icon.el-button--small {
+  width: 32px;
+  height: 32px;
+  padding: 9px;
+}
+
+.icon.el-button--mini {
+  width: 24px;
+  height: 24px;
+  padding: 0px;
+}
+
+.el-form-item.line-height-0 .el-form-item__content {
+  line-height: 0;
+}
+
+.left.el-input-number input {
+  text-align: left;
+}
