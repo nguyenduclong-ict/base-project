@@ -41,6 +41,12 @@ class Media {
   @field({ type: String, default: null })
   dimension?: string
 
+  @field({ type: String, default: null })
+  alt?: string
+
+  @field({ type: String, default: null })
+  caption?: string
+
   @field({
     type: SchemaTypes.Mixed,
     default: [],

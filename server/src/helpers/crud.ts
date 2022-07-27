@@ -1,13 +1,13 @@
-import { Request, RequestHandler, Response, Router } from 'express'
+import { Request, RequestHandler, Router } from 'express'
+import _ from 'lodash'
+import { Model } from 'mongoose'
+import { resolve as resolveUrl } from 'url'
 import {
   findDocuments,
   listDocuments,
   parseJSON,
   parsePopulateFromRequest,
 } from './mongo'
-import { Model } from 'mongoose'
-import _ from 'lodash'
-import { resolve as resolveUrl } from 'url'
 
 export type LiteralUnion<T extends U, U = string> =
   | T
@@ -27,20 +27,8 @@ export function sendError(
 
 export const listEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
-    console.log('listEntityController')
     try {
-      let query: any = {}
-
-      if (req.query.query) {
-        try {
-          query = JSON.parse(req.query.query as string)
-        } catch (error) {}
-      }
-
-      // Inject shop query
-      if (req.shopId) {
-        query[req.shopId] = req.shopId
-      }
+      let query: any = req.query.query || {}
 
       const result = await listDocuments(model, {
         query,

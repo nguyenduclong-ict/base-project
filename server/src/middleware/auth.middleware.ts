@@ -1,5 +1,5 @@
-import { UserModel } from '@/database'
-import { compareObjectId, verifyToken } from '@/helpers'
+import { ShopModel, UserModel } from '@/database'
+import { compareObjectId, objectIdToString, verifyToken } from '@/helpers'
 import consola from 'consola'
 import { RequestHandler } from 'express'
 import { get } from 'lodash'
@@ -32,7 +32,10 @@ export const getUser: RequestHandler = async (req, res, next) => {
  * @param shopIdPath
  * @returns
  */
-export const isShopMember = function (shopIdPath?: string): RequestHandler {
+export const isShopMember = function (
+  shopIdPath?: string,
+  required = true
+): RequestHandler {
   return async (req, res, next) => {
     const shopId = shopIdPath
       ? get(req, shopIdPath)
@@ -44,11 +47,13 @@ export const isShopMember = function (shopIdPath?: string): RequestHandler {
         get(req.query, 'shop') ||
         get(req.body, 'shop')
 
-    const shop =
-      shopId &&
-      req.user.roles.find((role) => compareObjectId(role.shop, shopId))
+    const shops = await ShopModel.find({
+      _id: { $in: req.user.roles.map((role) => objectIdToString(role.shop)) },
+    })
 
-    if (!shop) {
+    const shop = shopId && shops.find((shop) => compareObjectId(shop, shopId))
+
+    if (required && !shop) {
       return req.sendError({
         code: 401,
         type: 'NOT_HAS_PERMISSION_IN_SHOP',

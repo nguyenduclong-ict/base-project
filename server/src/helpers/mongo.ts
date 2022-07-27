@@ -1,5 +1,6 @@
 import { connection } from '@/config/connection'
 import _ from 'lodash'
+import { ObjectId } from 'mongodb'
 import {
   FilterQuery,
   Model,
@@ -7,7 +8,6 @@ import {
   SchemaDefinitionProperty,
   Types,
 } from 'mongoose'
-import { ObjectId } from 'mongodb'
 export interface Entity {
   _id?: any
   id?: any
@@ -248,13 +248,14 @@ export const objectIdToString = (id: Types.ObjectId | string | any): string => {
 
   // object contains objectid, example: shop {_id}
   if (id._id) id = id._id
-  if (id.id) id = id.id
+  else if (id.id) id = id.id
   if (id instanceof Types.ObjectId) return id.toHexString()
   if (typeof id === 'string') return id
   return String(id)
 }
 
-export const compareObjectId = (id1: any, id2: any) =>
-  objectIdToString(id1) === objectIdToString(id2)
+export const compareObjectId = (id1: any, id2: any) => {
+  return objectIdToString(id1) === objectIdToString(id2)
+}
 
 export const createObjectId = () => new ObjectId().toString()
