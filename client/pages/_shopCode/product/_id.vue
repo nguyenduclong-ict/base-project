@@ -3,7 +3,7 @@
     <div class="pb-2 flex">
       <div class="flex-1">
         <el-page-header
-          content="Thêm sản phẩm"
+          content="Chỉnh sửa sản phẩm"
           @back="() => $router.back()"
         ></el-page-header>
       </div>
@@ -27,22 +27,45 @@
 import { mapState } from 'vuex'
 import ProductForm from '~/components/Product/ProductForm.vue'
 import _ from '~/utils/lodash'
-import { getErrorMessage } from '~/utils/request'
+import { buildQueryUrl, getErrorMessage } from '~/utils/request'
 
 export default {
   components: { ProductForm },
 
-  meta: {
-    breadcrumb: [
-      {
-        path: '/{shopCode}/product',
-        name: 'Sản phẩm',
-      },
-      {
-        path: '/{shopCode}/product/create',
-        name: 'Thêm sản phẩm',
-      },
-    ],
+  async asyncData({ params, store, $axios, error }) {
+    const shopId = store.state.shop.currentShop.id
+
+    const product = await $axios.$get(
+      buildQueryUrl('/product/findone', {
+        query: {
+          _id: params.id,
+          shop: shopId,
+        },
+      })
+    )
+
+    if (!product) {
+      return error({ statusCode: 404, message: 'Sản phẩm không tồn tại' })
+    }
+
+    return {
+      form: product,
+    }
+  },
+
+  meta() {
+    return {
+      breadcrumb: [
+        {
+          path: '/{shopCode}/product',
+          name: 'Sản phẩm',
+        },
+        {
+          path: '/{shopCode}/product/create',
+          name: 'Thêm sản phẩm',
+        },
+      ],
+    }
   },
 
   data() {

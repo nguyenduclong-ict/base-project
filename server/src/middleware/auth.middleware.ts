@@ -95,7 +95,7 @@ export const hasPermisison = (...permissions: string[]) => {
     let pass
     for (const role of roles) {
       pass =
-        (shopId ? shopId === role.shop.id : true) &&
+        (shopId ? shopId === objectIdToString(role.shop) : true) &&
         (role.full_permission ||
           permissions.some((p) => role.permissions.includes(p)))
 

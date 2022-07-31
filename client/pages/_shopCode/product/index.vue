@@ -10,7 +10,19 @@
         </nuxt-link>
       </div>
     </div>
-    <DataTable :config="config" />
+    <DataTable :config="config" @edit="editProduct">
+      <el-table-column slot="column-image" :width="72">
+        <template slot-scope="{ row }">
+          <el-image
+            v-if="row.image"
+            style="width: 48px; height: 48px"
+            fit="cover"
+            :src="row.image.url"
+            :preview-src-list="[row.image.url]"
+          ></el-image>
+        </template>
+      </el-table-column>
+    </DataTable>
   </div>
 </template>
 
@@ -30,15 +42,17 @@ export default {
   },
   data() {
     return {
-      category: '62b53ca9f0c394b24f9c6255',
       config: {
         endpoint: '/product',
         columns: [
           { type: 'index', label: 'STT' },
           {
+            label: 'Tên sản phẩm',
             prop: 'name',
-            label: 'Name',
           },
+          { type: 'slot', prop: 'image' },
+          { label: 'Giá', prop: 'price' },
+          { type: 'controls', buttons: ['edit'] },
         ],
       },
       isShowCategoryTable: false,
@@ -46,6 +60,12 @@ export default {
   },
   computed: {
     ...mapState('shop', ['currentShop']),
+  },
+
+  methods: {
+    editProduct(product) {
+      this.$router.push(`/${this.currentShop.code}/product/${product.id}`)
+    },
   },
 }
 </script>

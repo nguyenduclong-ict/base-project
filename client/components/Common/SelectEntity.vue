@@ -3,6 +3,7 @@
     v-model="_value"
     :placeholder="placeholder"
     filterable
+    :multiple="multiple"
     :filter-method="handleFilter"
     @visible-change="(v) => v && fetchData()"
   >
@@ -68,7 +69,7 @@ export default {
       const selectedOptions = []
       if (this.value) {
         if (this.multiple && Array.isArray(this.value))
-          selectedOptions.push(...this.multiple)
+          selectedOptions.push(...this.value)
         else selectedOptions.push(this.value)
       }
 

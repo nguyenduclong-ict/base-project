@@ -9,6 +9,7 @@ import { Schema, SchemaTypes } from 'mongoose'
 import shortid from 'shortid'
 import { MediaImage } from '../Media'
 import { Shop } from '../Shop'
+import { Category } from './Category'
 import { ProductAttribute, ProductAttributeSchema } from './ProductAttribute'
 
 /** ProductVariantValue */
@@ -48,6 +49,9 @@ class Product {
 
   @field({ type: SchemaTypes.Mixed })
   images: MediaImage[]
+
+  @field([{ type: SchemaTypes.ObjectId, ref: 'Category' }])
+  categories?: Category[]
 
   @field({ type: [ProductAttributeSchema], default: [] })
   attributes: ProductAttribute[]

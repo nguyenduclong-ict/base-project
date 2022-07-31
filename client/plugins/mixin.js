@@ -1,7 +1,13 @@
 import Vue from 'vue'
 import Avatar from '@/components/Common/Avatar.vue'
+import _ from '~/utils/lodash'
 
 Vue.mixin({
+  data() {
+    const data = { _ }
+    return data
+  },
+
   methods: {
     validateForm(form) {
       return new Promise((resolve) => {

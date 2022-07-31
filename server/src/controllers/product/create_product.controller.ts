@@ -55,6 +55,10 @@ class Variant {
   @IsOptional()
   images?: MediaImage[]
 
+  @IsString({ each: true })
+  @IsOptional()
+  categories: string[]
+
   @IsNumber()
   sale_off_price: number
 }
@@ -71,13 +75,17 @@ class BodyCreateProduct {
   @IsOptional()
   description: string
 
-  @IsString()
+  @IsObject()
   @IsOptional()
   image: string
 
-  @IsString({ each: true })
+  @IsObject({ each: true })
   @IsOptional()
   images: string[]
+
+  @IsString({ each: true })
+  @IsOptional()
+  categories: string[]
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -138,6 +146,8 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
           shop: req.body.shop,
           slug: req.body.slug,
           price: req.body.price,
+          name: req.body.name,
+          categories: req.body.categories,
           sale_off_price: req.body.sale_off_price,
         },
       ],
@@ -182,6 +192,7 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
                 variant.values
               ),
             price: variant.price,
+            categories: req.body.categories,
             sale_off_price: variant.sale_off_price,
           }
         }),

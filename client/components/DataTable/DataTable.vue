@@ -7,8 +7,7 @@
           v-else-if="col.type === 'controls'"
           :key="col.key || col.prop || 'controls'"
           label="Thao tác"
-          :width="col.buttons && col.buttons.length * 34 + 20"
-          v-bind="col"
+          v-bind="getControlsColumnProps(col)"
         >
           <template slot-scope="{ row }">
             <el-button
@@ -209,6 +208,14 @@ export default {
           break
       }
       return props
+    },
+
+    getControlsColumnProps(col) {
+      return {
+        width: Math.max(col.buttons && col.buttons.length * 34 + 20, 82),
+        align: 'center',
+        ...col,
+      }
     },
   },
 }
