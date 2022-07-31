@@ -113,14 +113,15 @@ export const updateEntityController = (model: Model<any>): RequestHandler => {
 
     try {
       const entity = await model.findById(id)
-      if (!entity || (req.shopId && req.shopId !== entity.toJSON().shop)) {
-        return next({ code: 404, message: 'Entity not exists!' })
+      if (!entity) {
+        return req.sendError({ code: 404, message: 'Entity not exists!' })
       }
 
       Object.assign(entity, _.omit(req.body, 'id'))
       await entity.save()
       return res.json(entity)
     } catch (error: any) {
+      console.log(`updateEntityController error`, error)
       req.sendError({ code: 500, message: error.message || error.name })
     }
   }

@@ -163,7 +163,7 @@ export const findDocuments = async <T>(
   let sort: any = {}
 
   if (params.search) {
-    Object.assign(query, { $text: { $search: `"${params.search}"` } })
+    Object.assign(query, { $text: { $search: `\"${params.search}\"` } })
   }
 
   if (params.sort) {

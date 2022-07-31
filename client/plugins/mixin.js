@@ -10,6 +10,11 @@ Vue.mixin({
         })
       })
     },
+    showConfirm(...args) {
+      return new Promise(resolve => {
+        this.$confirm(...args).then(() => resolve(true)).catch(() => resolve(false))
+      })
+    }
   },
 })
 

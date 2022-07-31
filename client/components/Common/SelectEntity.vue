@@ -1,5 +1,11 @@
 <template>
-  <el-select v-model="_value" @visible-change="(v) => v && fetchData()">
+  <el-select
+    v-model="_value"
+    :placeholder="placeholder"
+    filterable
+    :filter-method="handleFilter"
+    @visible-change="(v) => v && fetchData()"
+  >
     <el-option
       v-for="(option, index) in data"
       :key="getOptionKey(option, index)"
@@ -10,11 +16,13 @@
 </template>
 
 <script>
-import qs from 'qs'
+import _ from '~/utils/lodash'
+import { buildQueryUrl } from '~/utils/request'
 
 export default {
   props: {
-    value: { default: null },
+    value: { type: null, default: null },
+    placeholder: String,
     config: {
       type: Object,
       default: () => ({}),
@@ -29,11 +37,6 @@ export default {
     },
   },
 
-  created() {
-    this.data = [...this.dataSource]
-    this.fetchSelectedOptions()
-  },
-
   data() {
     return {
       data: [],
@@ -42,13 +45,21 @@ export default {
 
   computed: {
     _value: {
-      get(v) {
+      get() {
         return this.value
       },
       set(v) {
         this.$emit('input', v)
       },
     },
+  },
+
+  created() {
+    this.data = [...this.dataSource]
+    this.fetchSelectedOptions()
+    this.handleFilter = this.config?.endpoint
+      ? _.debounce(this._handleFilter, 300)
+      : null
   },
 
   methods: {
@@ -64,39 +75,34 @@ export default {
       if (!selectedOptions.length) return []
 
       try {
-        const queryString = qs.stringify(
-          {
+        const response = await this.$axios.$get(
+          buildQueryUrl(this.config.endpoint, {
             ...this.config.payload,
             'query[id][$in]': selectedOptions,
-          },
-          { encode: false }
-        )
-
-        const response = await this.$axios.$get(
-          this.config.endpoint + '?' + queryString
+          })
         )
 
         this.data.push(...response)
       } catch (error) {}
     },
 
-    async fetchData() {
+    async fetchData(overidePayload) {
       try {
-        const queryString = qs.stringify(
-          {
-            ...this.config.payload,
-          },
-          { encode: false }
-        )
-
         const response = await this.$axios.$get(
-          this.config.endpoint + '?' + queryString
+          buildQueryUrl(this.config.endpoint, {
+            ...this.config.payload,
+            ...overidePayload,
+          })
         )
 
         this.data = response
       } catch (error) {
         console.log('fetchData Error', error)
       }
+    },
+
+    _handleFilter(query) {
+      this.fetchData({ search: query })
     },
 
     getOptionKey(option, index) {

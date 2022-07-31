@@ -5,40 +5,19 @@ import {
   getSchemaDefinition,
   registerModel,
 } from '@/helpers/mongo'
-import { IsArray, IsString } from 'class-validator'
 import { Schema, SchemaTypes } from 'mongoose'
 import shortid from 'shortid'
 import { MediaImage } from '../Media'
 import { Shop } from '../Shop'
-
-/** ProductAttribute */
-export class ProductAttribute {
-  @field(String)
-  @IsString()
-  name: string
-
-  @field(String)
-  @IsString()
-  code: string
-
-  @field({ type: SchemaTypes.Mixed, default: [] })
-  @IsArray()
-  values: any[]
-}
-
-const ProductAttributeSchema = new Schema<ProductAttribute>(
-  getSchemaDefinition(ProductAttribute),
-  { timestamps: true }
-)
-addTransformIdForSchema(ProductAttributeSchema)
+import { ProductAttribute, ProductAttributeSchema } from './ProductAttribute'
 
 /** ProductVariantValue */
 class ProductVariantValue {
   @field(String)
-  attribute_code: string
+  slug: string
 
   @field(SchemaTypes.Mixed)
-  attribute_value: string
+  value: string
 }
 
 const ProductVariantValueSchema = new Schema<ProductVariantValue>(
@@ -124,11 +103,7 @@ const ProductTools = {
     parentName: string,
     variantValues: ProductVariantValue[]
   ) {
-    return (
-      parentName +
-      ' ' +
-      variantValues.map((item) => item.attribute_value).join(', ')
-    )
+    return parentName + ' ' + variantValues.map((item) => item.value).join(', ')
   },
 
   generateProductVariantSlug(
@@ -136,9 +111,7 @@ const ProductTools = {
     variantValues: ProductVariantValue[]
   ) {
     return createSlug(
-      parentSlug +
-        '-' +
-        variantValues.map((item) => item.attribute_value).join('-')
+      parentSlug + '-' + variantValues.map((item) => item.value).join('-')
     )
   },
 }
@@ -150,21 +123,19 @@ export function validateVariants(product: Product) {
     }
 
     item.variant_values.forEach((value) => {
-      if (
-        !product.attributes.find((attr) => attr.code === value.attribute_code)
-      ) {
+      if (!product.attributes.find((attr) => attr.slug === value.slug)) {
         throw new Error(
-          `Variant values 'attribute_code' ${value.attribute_code} not found in product`
+          `Variant values 'slug' ${value.slug} not found in product`
         )
       }
 
       if (
         !product.attributes.find((attr) =>
-          attr.values.includes(value.attribute_value)
+          attr.values.find((v) => v.slug === value.slug)
         )
       ) {
         throw new Error(
-          `Variant values 'attribute_value' ${value.attribute_value} not found in product`
+          `Variant values 'slug' ${value.slug} not found in product`
         )
       }
     })

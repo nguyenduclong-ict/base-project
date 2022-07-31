@@ -34,13 +34,22 @@ export const state = () => ({
     {
       title: 'Kho hàng',
       key: 'warehouse',
+      icon: 'el-icon-takeaway-box',
+      shop: true,
+      children: [
+        { title: 'Nhập hàng', route: '/{shopCode}/warehouse/import' },
+        { title: 'Xuất hàng', route: '/{shopCode}/warehouse/export' },
+      ],
+    },
+    {
+      title: 'Sản phẩm',
+      key: 'product',
       icon: 'el-icon-box',
       shop: true,
       children: [
-        { title: 'Danh sách sản phẩm', route: '/{shopCode}/product', icon: '' },
-        { title: 'Nhập hàng', route: '/{shopCode}/import', icon: '' },
-        { title: 'Xuất hàng', route: '/{shopCode}/export', icon: '' },
-        { title: 'Tồn kho', route: '/{shopCode}/product/create', icon: '' },
+        { title: 'Danh sách sản phẩm', route: '/{shopCode}/product' },
+        { title: 'Danh mục', route: '/{shopCode}/product/category' },
+        { title: 'Thuộc tính', route: '/{shopCode}/product/attribute' },
       ],
     },
   ]

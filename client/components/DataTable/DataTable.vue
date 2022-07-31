@@ -4,6 +4,22 @@
       <template v-for="col in columns">
         <slot v-if="col.type === 'slot'" :name="`column-${col.prop}`"></slot>
         <el-table-column
+          v-else-if="col.type === 'controls'"
+          :key="col.key || col.prop || 'controls'"
+          label="Thao tác"
+          :width="col.buttons && col.buttons.length * 34 + 20"
+          v-bind="col"
+        >
+          <template slot-scope="{ row }">
+            <el-button
+              v-for="button in col.buttons"
+              :key="button"
+              v-bind="getButtonProps(button)"
+              @click="handleControl(button, row)"
+            ></el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-else
           :key="col.key || col.prop"
           v-bind="col"
@@ -28,8 +44,9 @@
 </template>
 
 <script>
-import * as qs from 'qs'
 import pick from 'lodash/pick'
+import { getMongoId } from '~/utils'
+import { buildQueryUrl } from '~/utils/request'
 export default {
   props: {
     config: {
@@ -97,15 +114,11 @@ export default {
         const { payload } = this.config
 
         const response = await this.$axios.$get(
-          this.config.endpoint +
-            qs.stringify(
-              {
-                ...payload,
-                ...overridePayload,
-                ...this.pager,
-              },
-              { encode: false, addQueryPrefix: true }
-            )
+          buildQueryUrl(this.config.endpoint, {
+            ...payload,
+            ...overridePayload,
+            ...this.pager,
+          })
         )
 
         const { data, ...pager } = response
@@ -127,6 +140,75 @@ export default {
       this.pager.page = Math.max(1, Math.floor(currentOffset / size))
       this.pager.pageSize = size
       this.fetchData()
+    },
+
+    handleControl(button, row) {
+      switch (button) {
+        case 'delete':
+          this.deleteRow(row)
+          break
+
+        default:
+          this.$emit(button, row)
+          break
+      }
+    },
+
+    async deleteRow(row) {
+      try {
+        const agree = await this.showConfirm(
+          'Bạn có chắc chắn muốn xóa dữ liệu?',
+          'Chú ý',
+          {
+            confirmButtonText: 'Xóa',
+            confirmButtonClass: 'el-button--danger',
+            type: 'warning',
+          }
+        )
+
+        if (agree) {
+          const { deletedCount } = await this.$axios.$delete(
+            buildQueryUrl(this.config.endpoint + '/' + row.id, {
+              shop: getMongoId(row.shop),
+            })
+          )
+          if (deletedCount > 0) {
+            this.$message.success('Xóa thành công')
+            this.fetchData()
+          } else {
+            throw new Error(`deletedCount = 0`)
+          }
+        }
+      } catch (error) {
+        console.error(`deleteRow error`, error)
+        this.$message.error('Xóa không thành công')
+      }
+    },
+
+    getButtonProps(button) {
+      const props = {
+        size: 'mini',
+        class: 'icon',
+      }
+      switch (button) {
+        case 'delete':
+          Object.assign(props, {
+            type: 'danger',
+            icon: 'el-icon-delete',
+          })
+          break
+
+        case 'edit':
+          Object.assign(props, {
+            type: 'primary',
+            icon: 'el-icon-edit',
+          })
+          break
+
+        default:
+          break
+      }
+      return props
     },
   },
 }

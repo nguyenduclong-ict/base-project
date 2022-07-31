@@ -23,10 +23,10 @@ import { RequestHandler } from 'express'
 
 class VariantValue {
   @IsString()
-  attribute_code: string
+  slug: string
 
   @IsString()
-  attribute_value: string
+  value: string
 }
 
 class Variant {

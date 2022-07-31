@@ -40,6 +40,7 @@
                 v-for="media in medias"
                 :key="media.id"
                 class="media-item"
+                @click.native="handleSelect(media)"
               >
                 <div class="image-wrapper flex justify-center relative">
                   <el-checkbox
@@ -451,50 +452,54 @@ export default {
 
     async upload() {
       this.uploading = true
-      await Promise.all(
-        this.filesForUpload.map(async (file) => {
-          try {
-            file.uploading = true
+      try {
+        await Promise.all(
+          this.filesForUpload.map(async (file) => {
+            try {
+              file.uploading = true
 
-            const formData = new FormData()
-            formData.append('file', file.raw)
-            formData.append(
-              'fileInfo',
-              JSON.stringify({
-                name: file.name,
-                alt: file.alt,
-                caption: file.caption,
-              })
-            )
-            formData.append('shop_id', this.currentShop.id)
+              const formData = new FormData()
+              formData.append('file', file.raw)
+              formData.append(
+                'fileInfo',
+                JSON.stringify({
+                  name: file.name,
+                  alt: file.alt,
+                  caption: file.caption,
+                })
+              )
+              formData.append('shop_id', this.currentShop.id)
 
-            const response = await this.$axios.$post(
-              '/media/upload',
-              formData,
-              {
-                onUploadProgress: (progressEvent) => {
-                  const percentCompleted = Math.round(
-                    (progressEvent.loaded / progressEvent.total) * 100
-                  )
-                  file.progress = percentCompleted
-                },
-              }
-            )
+              const response = await this.$axios.$post(
+                '/media/upload',
+                formData,
+                {
+                  onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round(
+                      (progressEvent.loaded / progressEvent.total) * 100
+                    )
+                    file.progress = percentCompleted
+                  },
+                }
+              )
 
-            file.response = response
+              file.response = response
 
-            Object.assign(
-              file,
-              _.pick(response, 'id', 'name', 'alt', 'caption', 'url')
-            )
+              Object.assign(
+                file,
+                _.pick(response, 'id', 'name', 'alt', 'caption', 'url')
+              )
 
-            return response
-          } catch (error) {
-            console.error(`upload error`, file, error)
-            file.error = error
-          }
-        })
-      )
+              return response
+            } catch (error) {
+              console.error(`upload error`, file, error)
+              file.error = error
+            }
+          })
+        )
+      } catch (error) {
+        console.error(`Upload error`, error)
+      }
       const uploadSuccess = this.filesForUpload
         .filter((e) => e.response)
         .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))

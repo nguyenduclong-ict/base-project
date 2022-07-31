@@ -74,3 +74,15 @@ body {
 .left.el-input-number input {
   text-align: left;
 }
+
+.el-form-item.left .el-form-item__label {
+  text-align: left;
+}
+
+.el-message {
+  min-width: auto !important;
+}
+
+.small-divider {
+  margin: 4px 0px !important;
+}

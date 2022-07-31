@@ -2,11 +2,10 @@ import { Colors } from '@/config/constants'
 import { createSlug } from '@/helpers'
 import {
   addTransformIdForSchema,
+  field,
   getSchemaDefinition,
   registerModel,
-  field,
 } from '@/helpers/mongo'
-import { IsString } from 'class-validator'
 import { sample } from 'lodash'
 import { Schema, SchemaTypes } from 'mongoose'
 import { Shop } from '../Shop'
@@ -18,7 +17,7 @@ class Category {
   @field({ type: String })
   color?: string
 
-  @field({ type: String, required: true })
+  @field({ type: String, required: true, index: 'text' })
   name: string
 
   @field({ type: SchemaTypes.ObjectId, ref: 'Category' })

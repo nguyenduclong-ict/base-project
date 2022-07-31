@@ -45,6 +45,7 @@ export const isShopMember = function (
         get(req.body, 'shop_id') ||
         get(req.params, 'shop') ||
         get(req.query, 'shop') ||
+        get(req.query?.query, 'shop') ||
         get(req.body, 'shop')
 
     const shops = await ShopModel.find({
