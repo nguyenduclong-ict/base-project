@@ -9027,13 +9027,6 @@ quill-image-drop-and-paste@^1.2.11:
   resolved "https://registry.yarnpkg.com/quill-image-drop-and-paste/-/quill-image-drop-and-paste-1.2.11.tgz#9f4d2daa51ab9d22fe3a0daa3d0da81b3393ecd0"
   integrity sha512-LxYDAmwtwlkcp2vRuEngbxtKSeVTq5vgkDlJx41P/YZBNV4nYRwH5gBVqDfwdKwvfsFGKo067UhA6rKICJPJKg==
 
-quill-image-drop-module@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/quill-image-drop-module/-/quill-image-drop-module-1.0.3.tgz#0e5ec8329dd67a12126f166b191bf64d2057a7d3"
-  integrity sha512-HP0Y2kb3nQk1QbRKZzEe1j3mArRQerN5B/U/MlXrOnxmhy3m/xYmVv0YoE13vWnGnBOIcoXGJ/9fi7l6AwsP8Q==
-  dependencies:
-    quill "^1.2.2"
-
 quill-image-resize-module@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/quill-image-resize-module/-/quill-image-resize-module-3.0.0.tgz#0fd93746a837336d95b2f536140416a623c71771"

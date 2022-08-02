@@ -52,6 +52,13 @@ export const state = () => ({
         { title: 'Thuộc tính', route: '/{shopCode}/product/attribute' },
       ],
     },
+    {
+      title: 'Cài đặt',
+      icon: 'el-icon-setting',
+      shop: true,
+      key: 'setting',
+      children: [{ title: 'Thư viện ảnh', route: '/{shopCode}/setting/media' },]
+    }
   ]
 })
 

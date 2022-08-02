@@ -21,7 +21,7 @@ export class MediaThumbnail {
 }
 
 class Media {
-  @field(String)
+  @field({ type: String, index: 'text' })
   name: string // orignal name
 
   @field({ type: String })

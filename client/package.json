@@ -26,7 +26,6 @@
     "nuxt": "^2.15.8",
     "qs": "^6.11.0",
     "quill-image-drop-and-paste": "^1.2.11",
-    "quill-image-drop-module": "^1.0.3",
     "quill-image-resize-module": "^3.0.0",
     "shortid": "^2.2.16",
     "vue": "^2.6.14",

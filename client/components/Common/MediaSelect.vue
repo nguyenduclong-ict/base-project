@@ -570,6 +570,10 @@ export default {
     width: 200px;
     flex: none;
 
+    .text-xs {
+      word-break: break-all;
+    }
+
     .image-wrapper {
       background: repeating-conic-gradient(
           rgb(246, 246, 249) 0%,
