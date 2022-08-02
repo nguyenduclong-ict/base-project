@@ -67,6 +67,13 @@ body {
   padding: 0px;
 }
 
+// Button
+.icon.el-button--medium {
+  width: 36px;
+  height: 36px;
+  padding: 10px;
+}
+
 .el-form-item.line-height-0 .el-form-item__content {
   line-height: 0;
 }

@@ -1,28 +1,34 @@
 <template>
   <div class="media-select inline-flex flex-wrap gap-2">
-    <div v-for="(item, index) in valueItems" :key="item.id" class="value-item">
-      <el-image
-        :src="item.url"
-        style="width: 128px; height: 128px"
-        :preview-src-list="[item.url]"
-        fit="cover"
-      ></el-image>
+    <template v-if="showTrigger">
+      <div
+        v-for="(item, index) in valueItems"
+        :key="item.id"
+        class="value-item"
+      >
+        <el-image
+          :src="item.url"
+          style="width: 128px; height: 128px"
+          :preview-src-list="[item.url]"
+          fit="cover"
+        ></el-image>
 
-      <el-button
-        class="icon absolute top-1 right-1"
-        icon="el-icon-delete"
-        size="mini"
-        @click="deleteValue(item, index)"
-      ></el-button>
-    </div>
+        <el-button
+          class="icon absolute top-1 right-1"
+          icon="el-icon-delete"
+          size="mini"
+          @click="deleteValue(item, index)"
+        ></el-button>
+      </div>
 
-    <div
-      v-if="multiple || (!multiple && !value)"
-      class="value-item cursor-pointer flex justify-center items-center border border-dashed border-gray-400 bg-gray-100"
-      @click="show"
-    >
-      <i class="el-icon-plus text-gray-500" style="font-size: 32px"></i>
-    </div>
+      <div
+        v-if="multiple || (!multiple && !value)"
+        class="value-item cursor-pointer flex justify-center items-center border border-dashed border-gray-400 bg-gray-100"
+        @click="show"
+      >
+        <i class="el-icon-plus text-gray-500" style="font-size: 32px"></i>
+      </div>
+    </template>
 
     <el-dialog
       :visible.sync="visible"
@@ -264,6 +270,10 @@ export default {
     limit: {
       type: Number,
       default: 10,
+    },
+    showTrigger: {
+      type: Boolean,
+      default: true,
     },
   },
 

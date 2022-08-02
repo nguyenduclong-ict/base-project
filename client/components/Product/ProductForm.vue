@@ -34,7 +34,10 @@
     </div>
 
     <el-form-item label="Mô tả sản phẩm">
-      <el-input v-model="form.description" type="textarea"></el-input>
+      <!-- <el-input v-model="form.description" type="textarea"></el-input> -->
+      <div class="w-full inline-block">
+        <Editor v-model="form.description" />
+      </div>
     </el-form-item>
 
     <el-form-item label="Danh mục sản phẩm">
@@ -191,12 +194,13 @@
 <script>
 import { mapState } from 'vuex'
 import SelectEntity from '../Common/SelectEntity.vue'
+import Editor from '../Common/Editor/Editor.vue'
 import MediaSelect from '~/components/Common/MediaSelect.vue'
 import { uniqueId } from '~/utils'
 import { buildQueryUrl } from '~/utils/request'
 
 export default {
-  components: { MediaSelect, SelectEntity },
+  components: { MediaSelect, SelectEntity, Editor },
 
   props: {
     form: {

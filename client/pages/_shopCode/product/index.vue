@@ -1,5 +1,5 @@
 <template>
-  <div class="p-5">
+  <div class="py-5 px-10">
     <div class="flex mb-2">
       <div class="flex-1"></div>
       <div>

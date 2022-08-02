@@ -1,5 +1,5 @@
 <template>
-  <div class="p-5">
+  <div class="py-5 px-10">
     <div class="pb-2 flex">
       <div class="flex-1">
         <el-page-header

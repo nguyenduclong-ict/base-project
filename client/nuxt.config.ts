@@ -18,10 +18,14 @@ export default {
   css: ['~/assets/css/main.scss', 'element-ui/lib/theme-chalk/index.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/element-ui', '@/plugins/mixin'],
+  plugins: [
+    { src: '@/plugins/client', ssr: false },
+    '@/plugins/element-ui',
+    '@/plugins/mixin',
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  components: false,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
