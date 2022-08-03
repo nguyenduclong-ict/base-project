@@ -1,14 +1,13 @@
 {
-  "name": "base-project",
+  "name": "shop-manager",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Shop and sale manager",
   "scripts": {
     "dev:server": "cd server && npm run dev",
-    "dev:client": "cd client && npm run dev",
+    "dev:admin": "cd admin && npm run dev",
     "dc:up": "cd server && npm run dc:up",
     "dc:down": "cd server && npm run dc:down",
-    "dev": "concurrently -n \"server,client\" -c \"bgBlue.bold,bgGreen.bold\" \"npm:dev:server\" \"npm:dev:client\""
+    "dev": "concurrently -n \"server,admin\" -c \"bgBlue.bold,bgGreen.bold\" \"npm:dev:server\" \"npm:dev:admin\""
   },
   "author": "Nguyen Duc Long",
   "license": "ISC",

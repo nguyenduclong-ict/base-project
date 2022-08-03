@@ -1,5 +1,5 @@
 module.exports = {
     projects: [
-        './client',
+        './admin',
     ]
 }

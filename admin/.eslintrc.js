@@ -17,6 +17,7 @@ module.exports = {
     'vue/require-valid-default-prop': 0,
     'vue/require-default-prop': 0,
     'vue/no-unused-vars': 0,
+    '@typescript-eslint/no-unused-vars': 1,
     'vue/no-use-v-if-with-v-for': 0,
     'vue/no-v-html': 0,
     'standard/no-callback-literal': 0,
