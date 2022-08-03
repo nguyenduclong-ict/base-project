@@ -28,7 +28,7 @@ const ProductVariantValueSchema = new Schema<ProductVariantValue>(
 addTransformIdForSchema(ProductVariantValueSchema)
 
 class Product {
-  @field({ type: String, required: true })
+  @field({ type: String, required: true, index: 'text' })
   name: string
 
   @field({
@@ -38,6 +38,7 @@ class Product {
     default: function (this, doc: any) {
       return shortid() + '-' + createSlug(doc.name)
     },
+    index: 'text',
   })
   slug: string
 
@@ -80,11 +81,23 @@ class Product {
   @field(Boolean)
   is_sale_off: boolean
 
-  @field({ type: Number, default: 0 })
-  avg_price: number // Giá vốn, tính theo công thức bình quân gia quyền
+  /**
+   * Giá vốn tính theo công thức bình quân
+   * https://www.sapo.vn/blog/gia-von-hang-ban-va-cach-tinh
+   */
 
-  @field({ type: Array, of: Number, default: [] })
-  avg_price_histories: [number, number] // Giá vốn trước đó, tính theo công thức bình quân gia quyền, gồm [tử số, mẫu số]
+  @field({ type: Number, default: 0 })
+  cost_price: number // Giá vốn, tính theo công thức bình quân
+
+  @field({
+    type: SchemaTypes.Mixed,
+    default: { ton_kho: 0, gia_tri_kho: 0, date: null },
+  })
+  cost_price_history: {
+    ton_kho: number // Tồn kho của sản phẩm tại thời điểm tính giá vốn
+    gia_tri_kho: number // Giá trị kho tại thời điểm tính giá vốn
+    date: Date // Thời điểm tính giá vốn
+  }
 
   @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
   shop: Shop
@@ -118,6 +131,8 @@ const ProductTools = {
       parentSlug + '-' + variantValues.map((item) => item.value).join('-')
     )
   },
+
+  tinhGiaVonSanPham() {},
 }
 
 export function validateVariants(product: Product) {

@@ -12,6 +12,8 @@ router.post(
   createProductController
 )
 
-registerRestApi(router, ProductModel, { actions: ['find', 'findOne', 'list'] })
+registerRestApi(router, ProductModel, {
+  actions: ['find', 'findOne', 'list', 'update'],
+})
 
 export default router

@@ -1,10 +1,17 @@
 import Vue from 'vue'
+import numeral from 'numeral'
 import Avatar from '@/components/Common/Avatar.vue'
 import _ from '~/utils/lodash'
 
 Vue.mixin({
+  filters: {
+    money(value, unit = "đ") {
+      return value && (numeral(value).format('0,0.[0]') + ' ' + unit)
+    }
+  },
+
   data() {
-    const data = { _ }
+    const data = { u: _ }
     return data
   },
 

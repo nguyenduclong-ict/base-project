@@ -98,3 +98,7 @@ body {
   background: #f6f6f9;
   font-weight: 500;
 }
+
+.page-content {
+  @apply py-5 px-10;
+}

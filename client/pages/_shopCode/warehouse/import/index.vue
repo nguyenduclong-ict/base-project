@@ -3,9 +3,9 @@
     <div class="flex mb-2">
       <div class="flex-1"></div>
       <div>
-        <nuxt-link to="product/create">
+        <nuxt-link to="import/create">
           <el-button type="primary" icon="el-icon-document-add">
-            Xuất hàng
+            Nhập hàng
           </el-button>
         </nuxt-link>
       </div>
@@ -27,8 +27,8 @@ export default {
   meta: {
     breadcrumb: [
       {
-        path: '/{shopCode}/warehouse/export',
-        name: 'Danh sách xuất hàng',
+        path: '/{shopCode}/warehouse/import',
+        name: 'Danh sách nhập hàng',
       },
     ],
   },
@@ -36,23 +36,24 @@ export default {
   data() {
     return {
       config: {
-        endpoint: '/export',
+        endpoint: '/warehouse/import',
         columns: [
           { type: 'index', label: 'STT' },
           {
             label: 'Kho hàng',
             prop: 'warehouse.name',
           },
-          { type: 'slot', prop: 'image' },
-          { label: 'Giá', prop: 'price' },
+          { label: 'Số sản phẩm', prop: 'quantity' },
+          { label: 'Tổng tiền', prop: 'price' },
+          { label: 'Ngày nhập', prop: 'date' },
+          { label: 'Trạng thái', prop: 'status' },
+          { label: 'Người tạo', prop: 'created_by.name' },
         ],
       },
     }
   },
 
-  created() {
-    console.log(this.currentShop)
-  },
+  created() {},
 
   methods: {
     demo() {},

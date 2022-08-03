@@ -83,7 +83,7 @@ export default {
         })
 
         if (valid) {
-          const response = await this.$axios.$post('/product', this.form)
+          const response = await this.$axios.$post('/product', payload)
           if (response.id) {
             this.$message.success('Thêm sản phẩm thành công')
             this.$router.back()

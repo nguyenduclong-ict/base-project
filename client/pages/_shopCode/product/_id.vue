@@ -13,7 +13,7 @@
           :loading="creating"
           icon="el-icon-finished"
           type="success"
-          @click="createProduct"
+          @click="updateProduct"
         >
           Lưu
         </el-button>
@@ -94,7 +94,7 @@ export default {
   },
 
   methods: {
-    async createProduct() {
+    async updateProduct() {
       this.creating = true
       try {
         const valid = await this.$refs.productForm.validate()
@@ -102,18 +102,20 @@ export default {
 
         Object.assign(payload, {
           shop: this.currentShop.id,
-          is_sale_off: !!payload.sale_off_price,
+          is_sale_off: !!payload.is_sale_off,
         })
 
         if (valid) {
-          const response = await this.$axios.$post('/product', this.form)
+          const response = await this.$axios.$put(
+            '/product/' + payload.id,
+            payload
+          )
           if (response.id) {
-            this.$message.success('Thêm sản phẩm thành công')
-            this.$router.back()
+            this.$message.success('Cập nhật sản phẩm thành công')
           }
         }
       } catch (error) {
-        console.error(`createProduct error`, error)
+        console.error(`updateProduct error`, error)
         this.$message.error(getErrorMessage(error))
       }
       this.creating = false

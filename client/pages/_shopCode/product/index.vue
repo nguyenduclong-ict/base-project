@@ -55,7 +55,6 @@ export default {
           { type: 'controls', buttons: ['edit'] },
         ],
       },
-      isShowCategoryTable: false,
     }
   },
   computed: {

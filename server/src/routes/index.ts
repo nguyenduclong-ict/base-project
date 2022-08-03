@@ -7,6 +7,7 @@ import authRoutes from './auth'
 import categoryRoutes from './category'
 import mediaRouters from './media'
 import productRoutes from './product'
+import importRoutes from './warehouse/import'
 
 const router = Router()
 
@@ -22,5 +23,6 @@ router.use('/product', isAuthenticated, productRoutes)
 router.use('/category', isAuthenticated, categoryRoutes)
 router.use('/media', mediaRouters)
 router.use('/attribute', mediaAttributes)
+router.use('/warehouse/import', importRoutes)
 
 export default router
