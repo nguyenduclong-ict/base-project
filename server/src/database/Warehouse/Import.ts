@@ -5,10 +5,10 @@ import {
   registerModel,
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
-import { Product } from './Product'
-import { Shop } from '../Shop'
-import { Warehouse } from './Warehouse'
+import { Shop } from '../Shop/Shop'
 import { User } from '../User'
+import { Product } from './Product/Product'
+import { Warehouse } from './Warehouse'
 
 class ImportItem {
   /** Sản phẩm nhập */

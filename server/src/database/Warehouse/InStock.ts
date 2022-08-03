@@ -5,8 +5,8 @@ import {
   registerModel,
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
-import { Shop } from '../Shop'
-import { Product } from './Product'
+import { Shop } from '../Shop/Shop'
+import { Product } from './Product/Product'
 import { Warehouse } from './Warehouse'
 
 /** Collection thể hiện mối quan hệ giữa sản phẩm và kho hàng (Hiện tại có bao nhiêu hàng trong kho) */

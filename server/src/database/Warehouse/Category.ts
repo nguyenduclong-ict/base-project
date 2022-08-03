@@ -8,7 +8,7 @@ import {
 } from '@/helpers/mongo'
 import { sample } from 'lodash'
 import { Schema, SchemaTypes } from 'mongoose'
-import { Shop } from '../Shop'
+import { Shop } from '../Shop/Shop'
 
 class Category {
   @field({ type: String, unique: true, required: true })

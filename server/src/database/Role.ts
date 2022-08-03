@@ -1,9 +1,9 @@
 import { Constants } from '@/config/constants'
 import {
   addTransformIdForSchema,
+  field,
   getSchemaDefinition,
   registerModel,
-  field,
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
 import { Shop } from './Shop'

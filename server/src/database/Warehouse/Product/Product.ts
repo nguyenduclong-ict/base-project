@@ -7,13 +7,13 @@ import {
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
 import shortid from 'shortid'
-import { MediaImage } from '../Media'
-import { Shop } from '../Shop'
-import { Category } from './Category'
-import { ProductAttribute, ProductAttributeSchema } from './ProductAttribute'
+import { MediaImage } from '../../Media'
+import { Shop } from '../../Shop/Shop'
+import { Category } from '../Category'
+import { ProductAttribute, ProductAttributeSchema } from '../ProductAttribute'
 
 /** ProductVariantValue */
-class ProductVariantValue {
+export class ProductVariantValue {
   @field(String)
   slug: string
 
@@ -113,54 +113,5 @@ const ProductSchema = new Schema<Product>(getSchemaDefinition(Product), {
 addTransformIdForSchema(ProductSchema)
 
 const ProductModel = registerModel('Product', ProductSchema)
-const ProductTools = {
-  model: ProductModel,
 
-  generateProductVariantName(
-    parentName: string,
-    variantValues: ProductVariantValue[]
-  ) {
-    return parentName + ' ' + variantValues.map((item) => item.value).join(', ')
-  },
-
-  generateProductVariantSlug(
-    parentSlug: string,
-    variantValues: ProductVariantValue[]
-  ) {
-    return createSlug(
-      parentSlug + '-' + variantValues.map((item) => item.value).join('-')
-    )
-  },
-
-  tinhGiaVonSanPham() {},
-}
-
-export function validateVariants(product: Product) {
-  for (const item of product.variants) {
-    if (item.variant_values.length === 0) {
-      throw new Error(`Variant values must at least 1 item`)
-    }
-
-    item.variant_values.forEach((value) => {
-      if (!product.attributes.find((attr) => attr.slug === value.slug)) {
-        throw new Error(
-          `Variant values 'slug' ${value.slug} not found in product`
-        )
-      }
-
-      if (
-        !product.attributes.find((attr) =>
-          attr.values.find((v) => v.slug === value.slug)
-        )
-      ) {
-        throw new Error(
-          `Variant values 'slug' ${value.slug} not found in product`
-        )
-      }
-    })
-  }
-
-  product.has_variants = product.variants.length > 0
-}
-
-export { Product, ProductSchema, ProductModel, ProductTools }
+export { Product, ProductSchema, ProductModel }

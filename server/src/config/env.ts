@@ -18,6 +18,8 @@ export const ENV = {
   S3_ENDPOINT: process.env.S3_ENDPOINT || 'http://localhost:9000',
   JWT_SECERT: process.env.JWT_SECERT,
   API_URL: process.env.API_URL,
+  GHN_TOKEN: process.env.GHN_TOKEN,
+  REDIS_URL: process.env.REDIS_URL,
 }
 
 export const requireEnv = (...keys: (keyof typeof ENV)[]) => {
@@ -33,4 +35,6 @@ export const requireEnv = (...keys: (keyof typeof ENV)[]) => {
   if (error) process.exit(1)
 }
 
-requireEnv('JWT_SECERT')
+Object.keys(ENV).forEach((key) => {
+  requireEnv(key as any)
+})

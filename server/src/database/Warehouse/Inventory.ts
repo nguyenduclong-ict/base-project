@@ -5,8 +5,8 @@ import {
   registerModel,
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
-import { Product } from './Product'
-import { Shop } from '../Shop'
+import { Shop } from '../Shop/Shop'
+import { Product } from './Product/Product'
 import { Warehouse } from './Warehouse'
 
 /** Collection lưu lại lịch sửa tồn kho theo thời gian */

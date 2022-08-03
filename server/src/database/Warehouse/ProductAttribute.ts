@@ -5,7 +5,7 @@ import {
   registerModel,
 } from '@/helpers/mongo'
 import { model, Schema, SchemaTypes } from 'mongoose'
-import { Shop } from '../Shop'
+import { Shop } from '../Shop/Shop'
 
 /** Thuộc tính của sản phẩm */
 

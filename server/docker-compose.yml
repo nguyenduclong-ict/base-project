@@ -52,7 +52,17 @@ services:
       - MINIO_ACCESS_KEY=${S3_ACCESS_KEY:-12345678}
       - MINIO_SECRET_KEY=${S3_SECRET_KEY:-password}
 
+  redis:
+    image: redis:5-alpine
+    command: redis-server --appendonly yes --bind 0.0.0.0
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
 volumes:
   mongodb_master_data:
     driver: local
   minio_data:
+  redis_data:

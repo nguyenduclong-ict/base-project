@@ -1,12 +1,11 @@
-import { createSlug } from '@/helpers'
 import {
   addTransformIdForSchema,
+  field,
   getSchemaDefinition,
   registerModel,
-  field,
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
-import { Shop } from '../Shop'
+import { Shop } from '../Shop/Shop'
 
 /** Collection lưu trữ các kho hàng */
 
@@ -15,10 +14,30 @@ class Warehouse {
   name: string
 
   @field({ type: String })
-  description: string
+  code: string
 
   @field({ type: String })
+  description: string
+
+  // address
+  @field(String)
   address: string
+
+  @field(String)
+  address2: string
+
+  @field(String)
+  country_code: string
+
+  @field(String)
+  province_code: string
+
+  @field(String)
+  district_code: string
+
+  @field(String)
+  ward_code: string
+  // end address
 
   @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
   shop: Shop

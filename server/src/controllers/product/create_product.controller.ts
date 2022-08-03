@@ -4,7 +4,6 @@ import {
   ProductAttribute,
   ProductModel,
   ProductTools,
-  validateVariants,
 } from '@/database'
 import { createSlug } from '@/helpers'
 import { createValidate } from '@/helpers/validator'
@@ -162,7 +161,7 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
     if (isProductHasVariant) {
       // create product with variants
       try {
-        validateVariants(req.body as any)
+        ProductTools.validateVariants(req.body as any)
       } catch (error: any) {
         return req.sendError({
           code: 422,

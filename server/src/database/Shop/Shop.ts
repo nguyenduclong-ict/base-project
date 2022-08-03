@@ -4,7 +4,8 @@ import {
   getSchemaDefinition,
   registerModel,
 } from '@/helpers/mongo'
-import { Schema } from 'mongoose'
+import { Schema, SchemaTypes } from 'mongoose'
+import { User } from '../User'
 
 class Shop {
   // _id?: any
@@ -21,6 +22,9 @@ class Shop {
 
   @field({ type: String })
   color: string
+
+  @field({ type: SchemaTypes.ObjectId, ref: 'User' })
+  created_by?: User
 
   createdAt?: Date
   updatedAt?: Date
