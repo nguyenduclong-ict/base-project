@@ -241,7 +241,7 @@ export const parseJSON = (value: any) => {
   return value
 }
 
-export const objectIdToString = (id: Types.ObjectId | string | any): string => {
+export const objectIdToString = (id: Types.ObjectId | string | any): any => {
   // objectid
   if (id === null) return id
   if (id instanceof Types.ObjectId) return id.toHexString()
@@ -254,6 +254,8 @@ export const objectIdToString = (id: Types.ObjectId | string | any): string => {
   if (typeof id === 'string') return id
   return String(id)
 }
+
+export const objectId = objectIdToString
 
 export const compareObjectId = (id1: any, id2: any) => {
   return objectIdToString(id1) === objectIdToString(id2)

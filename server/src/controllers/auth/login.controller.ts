@@ -23,7 +23,7 @@ const handler: RequestHandler = async (req, res, next) => {
   const body: LoginBody = req.body
   const user = await UserModel.findOne({ username: body.username }).populate({
     path: 'roles',
-    populate: 'shop',
+    populate: 'shops',
   })
   if (!user) {
     return req.sendError({

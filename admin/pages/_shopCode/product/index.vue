@@ -44,6 +44,11 @@ export default {
     return {
       config: {
         endpoint: '/product',
+        payload: {
+          query: {
+            shop: this.$store.state.shop.currentShop.id,
+          },
+        },
         columns: [
           { type: 'index', label: 'STT' },
           {

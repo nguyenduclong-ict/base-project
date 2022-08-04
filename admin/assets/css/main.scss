@@ -102,3 +102,17 @@ body {
 .page-content {
   @apply py-5 px-10;
 }
+
+.el-select__tags.primary .el-tag {
+  background-color: #409eff !important;
+  border-color: #409eff !important;
+  color: white !important;
+
+  .el-tag__close {
+    background-color: #e3f1ff !important;
+  }
+
+  .el-tag__close:hover {
+    color: #444 !important;
+  }
+}

@@ -2,13 +2,18 @@ import { connection } from '@/config'
 import {
   AutoIncreaseTools,
   AutoIncreaseType,
+  ProductAttribute,
+  ProductAttributeModel,
   RoleModel,
+  Shop,
   ShopModel,
   TaxTypeModel,
+  User,
+  UserModel,
   WarehouseModel,
 } from '@/database'
 import { ShopSettingModel, ShopSettingType } from '@/database/Shop/ShopSetting'
-import { createSlug, objectIdToString } from '@/helpers'
+import { createSlug, objectId } from '@/helpers'
 import logger from '@/helpers/logger'
 import { createValidate } from '@/helpers/validator'
 import { IsOptional, IsString } from 'class-validator'
@@ -73,7 +78,7 @@ export const _createShopController: RequestHandler<
         {
           name: req.body.name,
           code,
-          created_by: objectIdToString(req.user.id),
+          created_by: objectId(req.user.id),
           image_url: req.body.image_url,
           color: req.body.color,
         },
@@ -81,77 +86,11 @@ export const _createShopController: RequestHandler<
       { session }
     )
 
-    let adminRole = req.user.roles.find((role) => role.full_permission)
-
-    if (!adminRole) {
-      adminRole = await RoleModel.create(
-        [
-          {
-            created_by: objectIdToString(req.user),
-            is_default: false,
-            name: 'Admin của shop ' + req.body.name,
-            full_permission: true,
-            uid: createSlug(code + '-admin'),
-            shops: [objectIdToString(shop)],
-          },
-        ],
-        { session }
-      ).then((docs) => docs[0])
-    } else {
-      await RoleModel.updateOne(
-        {
-          id: objectIdToString(adminRole),
-        },
-        {
-          $push: {
-            shops: objectIdToString(shop),
-          },
-        },
-        {
-          session,
-        }
-      )
-    }
-
-    // init default warehouse
-    const [defaultWarehouse] = await WarehouseModel.create(
-      [
-        {
-          country_code: req.body.country_code || 'VN',
-          province_code: req.body.province_code,
-          district_code: req.body.district_code,
-          ward_code: req.body.ward_code,
-          address: req.body.address,
-          name: 'Kho mặc định',
-          code: await AutoIncreaseTools.generateCode(
-            'CN',
-            AutoIncreaseType.WAREHOUSE_CODE,
-            1,
-            objectIdToString(shop)
-          ),
-        },
-      ],
-      { session }
-    )
-
-    const [taxType] = await TaxTypeModel.create(
-      [{ code: '10', rate: 10, name: 'Thuế 10%', modifiable: false }],
-      { session }
-    )
-
-    // settings
-
-    ShopSettingModel.create([
-      {
-        type: ShopSettingType.TAX,
-        shop: objectIdToString(shop),
-        is_default: true,
-        value: {
-          default_sale_tax: objectIdToString(taxType),
-          default_import_tax: objectIdToString(taxType),
-          use_tax: true,
-        },
-      },
+    await Promise.all([
+      initAdminRoleForShop(req.user, shop, session),
+      initDefaultWarehouse(shop, session),
+      initShopSettings(shop, session),
+      initShopData(shop, req.user, session),
     ])
 
     await session.commitTransaction()
@@ -169,6 +108,130 @@ export const _createShopController: RequestHandler<
   } finally {
     await session.endSession()
   }
+}
+
+async function initAdminRoleForShop(user: User, shop: Shop, session: any) {
+  let adminRole = user.roles.find((role) => role.full_permission)
+
+  if (!adminRole) {
+    adminRole = await RoleModel.create(
+      [
+        {
+          created_by: objectId(user),
+          is_default: false,
+          name: 'Admin của shop ' + shop.name,
+          full_permission: true,
+          uid: createSlug(shop.code + '-admin'),
+          shops: [objectId(shop)],
+        },
+      ],
+      { session }
+    ).then((docs) => docs[0])
+    await UserModel.updateOne(
+      {
+        _id: objectId(user),
+      },
+      {
+        $push: {
+          roles: objectId(adminRole),
+        },
+      }
+    )
+  } else {
+    await RoleModel.updateOne(
+      {
+        _id: objectId(adminRole),
+      },
+      {
+        $push: {
+          shops: objectId(shop),
+        },
+      },
+      {
+        session,
+      }
+    )
+  }
+
+  return adminRole
+}
+
+async function initShopSettings(shop: Shop, session: any) {
+  const [taxType] = await TaxTypeModel.create(
+    [{ code: '10', rate: 10, name: 'Thuế 10%', modifiable: false }],
+    { session }
+  )
+
+  const settings = await ShopSettingModel.create([
+    {
+      type: ShopSettingType.TAX,
+      shop: objectId(shop),
+      is_default: true,
+      value: {
+        default_sale_tax: objectId(taxType),
+        default_import_tax: objectId(taxType),
+        use_tax: true,
+      },
+    },
+  ])
+
+  return settings
+}
+
+async function initDefaultWarehouse(shop: Shop, session: any) {
+  const [defaultWarehouse] = await WarehouseModel.create(
+    [
+      {
+        country_code: shop.country_code || 'VN',
+        province_code: shop.province_code,
+        district_code: shop.district_code,
+        ward_code: shop.ward_code,
+        address: shop.address,
+        name: 'Kho mặc định',
+        code: await AutoIncreaseTools.generateCode(
+          'CN',
+          AutoIncreaseType.WAREHOUSE_CODE,
+          1,
+          objectId(shop)
+        ),
+      },
+    ],
+    { session }
+  )
+
+  return defaultWarehouse
+}
+
+async function initShopData(shop: Shop, user: User, session: any) {
+  return Promise.all([
+    ProductAttributeModel.create(
+      [
+        {
+          name: 'Màu sắc',
+          shop: objectId(shop),
+          slug: 'color',
+          values: [
+            { value: 'Trắng', slug: 'trang' },
+            { value: 'Đen', slug: 'den' },
+            { value: 'Xanh', slug: 'xanh' },
+            { value: 'Đỏ', slug: 'do' },
+          ],
+        },
+        {
+          name: 'Size',
+          shop: objectId(shop),
+          slug: 'size',
+          values: [
+            { value: 'S', slug: 'S' },
+            { value: 'M', slug: 'M' },
+            { value: 'L', slug: 'L' },
+            { value: 'XL', slug: 'XL' },
+          ],
+        },
+      ] as ProductAttribute[],
+      { session }
+    ),
+  ])
 }
 
 export const createShopController = [

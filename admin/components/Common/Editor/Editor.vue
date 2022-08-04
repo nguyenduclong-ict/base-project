@@ -4,7 +4,6 @@
       ref="editor"
       :value="value"
       :placeholder="placeholder"
-      :custom-modules="customModules"
       :editor-options="options"
       @input="(v) => $emit('input', v)"
     />
@@ -29,8 +28,8 @@
 
 <script>
 import { VueEditor } from 'vue2-editor/dist/vue2-editor.core.js'
-import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
-import ImageResize from 'quill-image-resize-module'
+import 'quill-image-drop-and-paste'
+import 'quill-image-resize-module'
 import { mapState } from 'vuex'
 import MediaSelect from '../MediaSelect.vue'
 
@@ -47,10 +46,6 @@ export default {
       quill: null,
       previewUrl: null,
       imagesSelected: [],
-      customModules: [
-        { alias: 'imageResize', module: ImageResize },
-        { alias: 'imageDropAndPaste', module: QuillImageDropAndPaste },
-      ],
       options: {
         modules: {
           imageResize: {},

@@ -34,7 +34,6 @@
     </div>
 
     <el-form-item label="Mô tả sản phẩm">
-      <!-- <el-input v-model="form.description" type="textarea"></el-input> -->
       <div class="w-full inline-block">
         <Editor v-model="form.description" />
       </div>
@@ -91,9 +90,10 @@
         :key="attr.id"
         class="flex gap-2 mb-2"
       >
-        <div style="width: 200px; flex: none">
-          {{ attr.name }}
-        </div>
+        <el-input
+          v-model="attr.name"
+          style="width: 200px; flex: none"
+        ></el-input>
 
         <el-select
           v-model="attr.values"
@@ -101,14 +101,15 @@
           default-first-option
           filterable
           class="w-full"
-          value-key="id"
+          value-key="slug"
           placeholder="Giá trị cho thuộc tính"
+          @change="generateVariants()"
         >
           <el-option
             v-for="option in attr._values"
             :key="option.id"
             :value="option"
-            :label="option.name"
+            :label="option.value"
           ></el-option>
         </el-select>
 
@@ -120,7 +121,7 @@
         ></el-button>
       </div>
 
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-4 mb-2">
         <div>Các phiên bản</div>
       </div>
 
@@ -130,42 +131,16 @@
         </div>
       </div>
       <div v-else>
-        <el-card
-          v-for="(variant, index) in form.variants"
-          :key="variant.id"
-          class="mb-4"
-        >
-          <div class="flex justify-between mb-2">
-            <div>{{ index + 1 }}. {{ generateVariantName(variant) }}</div>
-            <el-button
-              class="icon"
-              type="danger"
-              icon="el-icon-delete"
-              @click="removeVariant(variant)"
-            ></el-button>
-          </div>
-          <div
-            v-for="item in variant.variant_values"
-            :key="item.attribute.id"
-            class="flex mb-2"
-          >
-            <span style="width: 200px; flex: none">
-              {{ item.attribute.name }}
-            </span>
-            <el-select
-              v-model="item.value"
-              class="w-full"
-              placeholder="Giá trị"
-            >
-              <el-option
-                v-for="option in item.attribute.values"
-                :key="option.id"
-                :value="option.slug"
-                :label="option.name"
-              ></el-option>
-            </el-select>
-          </div>
-        </el-card>
+        <el-table :data="form.variants" class="w-full">
+          <el-table-column type="index"></el-table-column>
+          <el-table-column :width="80">
+            <template #default="{ row }">
+              <MediaSelect v-model="row.image" :trigger-size="32" />
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="name"></el-table-column>
+        </el-table>
       </div>
     </template>
 
@@ -192,7 +167,7 @@ import { mapState } from 'vuex'
 import SelectEntity from '../Common/SelectEntity.vue'
 import Editor from '../Common/Editor/Editor.vue'
 import MediaSelect from '~/components/Common/MediaSelect.vue'
-import { uniqueId } from '~/utils'
+import { getCombination, uniqueId } from '~/utils'
 import { buildQueryUrl } from '~/utils/request'
 
 export default {
@@ -274,8 +249,8 @@ export default {
     generateVariantName(variant) {
       return (
         this.form.name +
-        ' ' +
-        variant.variant_values.map((item) => item.value).join(', ')
+        ' - ' +
+        variant.variant_values.map((item) => item.value).join(' - ')
       )
     },
 
@@ -292,64 +267,43 @@ export default {
           values: [...attribute.values],
         }
         this.form.attributes.push(item)
-        this.mapAttributeToVariants(item)
+        // this.mapAttributeToVariants(item)
         this.selectedAttr = null
+        this.generateVariants()
       }
     },
 
     removeAttribute(attr) {
       const index = this.form.attributes.indexOf(attr)
       this.form.attributes.splice(index, 1)
-      this.mapAttributeToVariants(null, attr)
-    },
-
-    mapAttributeToVariants(add, remove) {
-      this.form.variants.forEach((variant) => {
-        if (add) {
-          const index = variant.variant_values.findIndex(
-            (e) => e.attribute.id === add.id
-          )
-          if (index < 0) {
-            variant.variant_values.push({
-              attribute: add,
-              slug: add.slug,
-              value: null,
-            })
-          }
-        }
-
-        if (remove) {
-          const index = variant.variant_values.findIndex(
-            (e) => e.attribute.id === remove.id
-          )
-          if (index >= 0) {
-            variant.variant_values.splice(index, 1)
-          }
-        }
-      })
-    },
-
-    addVariant() {
-      this.form.variants.push({
-        id: uniqueId(),
-        variant_values: this.form.attributes.map((attr) => ({
-          attribute: attr,
-          slug: attr.slug,
-          value: null,
-        })),
-      })
+      // this.mapAttributeToVariants(null, attr)
+      this.generateVariants()
     },
 
     generateVariants() {
-      const groups = []
-      this.form.attributes.forEach((attribute) => {})
-    },
+      const attributes = this.form.attributes
+      const values = attributes.map((e) => e.values)
 
-    removeVariant(variant) {
-      const index = this.form.variants.findIndex((e) => e.id === variant.id)
-      if (index >= 0) {
-        this.form.variants.splice(index, 1)
-      }
+      const combinations = getCombination(values)
+
+      const variants = combinations.map((item) => {
+        const variant = {
+          id: uniqueId(),
+          image: '',
+          price: 0,
+          sale_off_price: 0,
+          is_sale_off: false,
+          variant_values: item.map((v, i) => ({
+            attribute: attributes[i],
+            slug: attributes[i].slug,
+            value: v.value,
+          })),
+        }
+        variant.name = this.generateVariantName(variant)
+        return variant
+      })
+
+      this.form.variants = variants
     },
 
     validate() {

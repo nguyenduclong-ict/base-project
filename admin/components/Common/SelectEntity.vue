@@ -5,6 +5,7 @@
     filterable
     :multiple="multiple"
     :filter-method="handleFilter"
+    default-first-option
     @visible-change="(v) => v && fetchData()"
   >
     <el-option

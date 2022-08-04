@@ -33,7 +33,7 @@ class Variant {
   @ArrayMinSize(1)
   @ValidateNested()
   @Type(() => VariantValue)
-  values: VariantValue[]
+  variant_values: VariantValue[]
 
   @IsNumber()
   price: number
@@ -49,10 +49,6 @@ class Variant {
   @IsObject()
   @IsOptional()
   image?: MediaImage
-
-  @IsObject({ each: true })
-  @IsOptional()
-  images?: MediaImage[]
 
   @IsString({ each: true })
   @IsOptional()
@@ -191,19 +187,19 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
             variant_of: product.id,
             image: variant.image,
             is_variant: true,
-            variant_values: variant.values,
+            variant_values: variant.variant_values,
             shop: req.body.shop,
             slug:
               variant.slug ||
               ProductTools.generateProductVariantSlug(
                 req.body.slug,
-                variant.values
+                variant.variant_values
               ),
             name:
               variant.name ||
               ProductTools.generateProductVariantName(
                 req.body.name,
-                variant.values
+                variant.variant_values
               ),
             price: req.body.price,
             sale_off_price: req.body.sale_off_price,

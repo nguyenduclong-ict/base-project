@@ -83,13 +83,15 @@ export default {
           is_sale_off: !!payload.sale_off_price,
         })
 
-        if (valid) {
-          const response = await this.$axios.$post('/product', payload)
-          if (response.id) {
-            this.$message.success('Thêm sản phẩm thành công')
-            this.$router.back()
-          }
-        }
+        console.log(payload)
+
+        // if (valid) {
+        //   const response = await this.$axios.$post('/product', payload)
+        //   if (response.id) {
+        //     this.$message.success('Thêm sản phẩm thành công')
+        //     this.$router.back()
+        //   }
+        // }
       } catch (error) {
         console.error(`createProduct error`, error)
         this.$message.error(getErrorMessage(error))

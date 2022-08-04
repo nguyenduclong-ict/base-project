@@ -11,7 +11,7 @@ import { Schema, SchemaTypes } from 'mongoose'
 import { Shop } from '../Shop/Shop'
 
 class Category {
-  @field({ type: String, unique: true, required: true })
+  @field({ type: String, required: true })
   slug: string
 
   @field({ type: String })
@@ -23,7 +23,7 @@ class Category {
   @field({ type: SchemaTypes.ObjectId, ref: 'Category' })
   parent: Category
 
-  @field({ type: SchemaTypes.ObjectId, ref: 'Shop', required: true })
+  @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
   shop: Shop
 
   createdAt?: Date | undefined
@@ -36,6 +36,8 @@ const CategorySchema = new Schema<Category>(
   },
   { timestamps: true, autoIndex: true }
 )
+
+CategorySchema.index({ shop: 1, slug: 1 })
 
 CategorySchema.virtual('children', {
   localField: '_id',

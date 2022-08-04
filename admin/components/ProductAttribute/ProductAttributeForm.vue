@@ -22,14 +22,14 @@
         >
           <el-form-item
             class="flex-1"
-            :prop="`values[${index}].name`"
+            :prop="`values[${index}].value`"
             required
             :rules="{ required: true, message: 'Nhập giá trị' }"
           >
             <div class="flex items-center gap-2">
               <i class="el-icon-sort cursor-move"></i>
               <el-input
-                v-model="value.name"
+                v-model="value.value"
                 placeholder="Nhập giá trị"
               ></el-input>
             </div>
@@ -77,7 +77,6 @@ export default {
     addValue(form) {
       form.values.push({
         id: uniqueId(),
-        name: '',
         slug: '',
         value: null,
       })

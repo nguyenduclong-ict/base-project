@@ -5,10 +5,17 @@
         v-for="(item, index) in valueItems"
         :key="item.id"
         class="value-item"
+        :style="{
+          width: triggerSize + 'px',
+          height: triggerSize + 'px',
+        }"
       >
         <el-image
           :src="item.url"
-          style="width: 128px; height: 128px"
+          :style="{
+            width: triggerSize + 'px',
+            height: triggerSize + 'px',
+          }"
           :preview-src-list="[item.url]"
           fit="cover"
         ></el-image>
@@ -24,9 +31,16 @@
       <div
         v-if="multiple || (!multiple && !value)"
         class="value-item cursor-pointer flex justify-center items-center border border-dashed border-gray-400 bg-gray-100"
+        :style="{
+          width: triggerSize + 'px',
+          height: triggerSize + 'px',
+        }"
         @click="show"
       >
-        <i class="el-icon-plus text-gray-500" style="font-size: 32px"></i>
+        <i
+          class="el-icon-plus text-gray-500"
+          :style="{ 'font-size': iconFontSize }"
+        ></i>
       </div>
     </template>
 
@@ -275,6 +289,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    triggerSize: {
+      type: Number,
+      default: 128,
+    },
   },
 
   data() {
@@ -302,6 +320,10 @@ export default {
           ? this.value.map(this.parseValueItem)
           : []
       return this.value ? [this.parseValueItem(this.value)] : []
+    },
+    iconFontSize() {
+      const size = Math.max(16, Math.floor(this.triggerSize / 4))
+      return size + 'px'
     },
   },
 

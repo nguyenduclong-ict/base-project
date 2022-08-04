@@ -37,6 +37,8 @@
         />
       </div>
 
+      <div class="px-2 pt-2">Chọn cửa hàng</div>
+      <el-divider class="small-divider"></el-divider>
       <el-scrollbar
         style="max-width: 240px"
         :wrap-style="[{ maxHeight: '500px' }]"

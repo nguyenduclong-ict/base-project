@@ -127,7 +127,7 @@ export default {
           {
             label: 'Các giá trị',
             prop: 'values',
-            render: (row) => row.values.map((e) => e.name).join(', '),
+            render: (row) => row.values.map((e) => e.value).join(', '),
           },
           {
             type: 'controls',

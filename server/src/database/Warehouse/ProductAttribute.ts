@@ -11,13 +11,10 @@ import { Shop } from '../Shop/Shop'
 
 export class ProductAttributeValue {
   @field({ type: SchemaTypes.String })
-  name: string
-
-  @field({ type: SchemaTypes.String })
   slug: string
 
-  @field({ type: SchemaTypes.Mixed, default: [] })
-  value: any
+  @field({ type: SchemaTypes.String })
+  value: string
 }
 
 const productAttribiuteValueSchema = new Schema(

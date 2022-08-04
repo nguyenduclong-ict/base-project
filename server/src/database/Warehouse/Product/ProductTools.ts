@@ -8,7 +8,9 @@ export const ProductTools = {
     parentName: string,
     variantValues: ProductVariantValue[]
   ) {
-    return parentName + ' ' + variantValues.map((item) => item.value).join(', ')
+    return (
+      parentName + ' - ' + variantValues.map((item) => item.value).join(' - ')
+    )
   },
 
   generateProductVariantSlug(
