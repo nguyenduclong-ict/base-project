@@ -125,6 +125,11 @@ export default {
             label: 'Slug',
           },
           {
+            label: 'Các giá trị',
+            prop: 'values',
+            render: (row) => row.values.map((e) => e.name).join(', '),
+          },
+          {
             type: 'controls',
             buttons: ['edit', 'delete'],
           },

@@ -21,11 +21,11 @@
             ></el-button>
           </template>
         </el-table-column>
-        <el-table-column
-          v-else
-          :key="col.key || col.prop"
-          v-bind="col"
-        ></el-table-column>
+        <el-table-column v-else :key="col.key || col.prop" v-bind="col">
+          <template v-if="isRenderFunction(col)" #default="{ row }">
+            {{ col.render(row) }}
+          </template>
+        </el-table-column>
       </template>
     </el-table>
 
@@ -203,7 +203,7 @@ export default {
         case 'edit':
           Object.assign(props, {
             type: 'primary',
-            icon: 'el-icon-edit',
+            icon: 'el-icon-edit-outline',
           })
           break
 
@@ -219,6 +219,10 @@ export default {
         align: 'center',
         ...col,
       }
+    },
+
+    isRenderFunction(col) {
+      return col.render && typeof col.render === 'function'
     },
   },
 }

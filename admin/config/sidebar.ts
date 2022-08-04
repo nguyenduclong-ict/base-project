@@ -41,20 +41,12 @@ export const shopSidebar: SidebarItem[] = [
     ],
   },
   {
-    title: 'Kho hàng',
-    key: 'warehouse',
-    icon: 'el-icon-takeaway-box',
-    children: [
-      { title: 'Nhập hàng', route: '/{shopCode}/warehouse/import' },
-      { title: 'Xuất hàng', route: '/{shopCode}/warehouse/export' },
-    ],
-  },
-  {
     title: 'Sản phẩm',
     key: 'product',
     icon: 'el-icon-box',
     children: [
       { title: 'Danh sách sản phẩm', route: '/{shopCode}/product' },
+      { title: 'Nhập hàng', route: '/{shopCode}/warehouse/import' },
       { title: 'Danh mục', route: '/{shopCode}/product/category' },
       { title: 'Thuộc tính', route: '/{shopCode}/product/attribute' },
     ],

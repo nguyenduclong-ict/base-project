@@ -122,10 +122,6 @@
 
       <div class="flex gap-2 mt-4">
         <div>Các phiên bản</div>
-        <div class="flex-1 border-t border-gray-300 my-auto"></div>
-        <el-button icon="el-icon-plus" type="primary" @click="addVariant">
-          Thêm phiên bản
-        </el-button>
       </div>
 
       <div v-if="!form.variants.length">
@@ -342,6 +338,11 @@ export default {
           value: null,
         })),
       })
+    },
+
+    generateVariants() {
+      const groups = []
+      this.form.attributes.forEach((attribute) => {})
     },
 
     removeVariant(variant) {
