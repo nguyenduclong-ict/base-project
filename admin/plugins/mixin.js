@@ -1,6 +1,5 @@
-import Vue from 'vue'
 import numeral from 'numeral'
-import Avatar from '@/components/Common/Avatar.vue'
+import Vue from 'vue'
 import _ from '~/utils/lodash'
 
 Vue.mixin({
@@ -31,5 +30,4 @@ Vue.mixin({
   },
 })
 
-// register global components
-Vue.component('Avatar', Avatar)
+

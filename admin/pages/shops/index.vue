@@ -6,13 +6,19 @@
         placeholder="Tìm kiếm shop"
         class="max-w-xs"
       ></el-input>
-      <el-button icon="el-icon-plus" type="primary">Thêm shop</el-button>
+      <el-button
+        icon="el-icon-plus"
+        type="primary"
+        @click="() => $router.push('/shops/create')"
+      >
+        Thêm shop
+      </el-button>
     </div>
     <div class="flex gap-8">
       <nuxt-link
-        :to="`/${shop.code}/statistic`"
         v-for="shop in shops"
         :key="shop.id"
+        :to="`/${shop.code}/statistic`"
         class="cursor-pointer"
         @click.native="handleSelectShop(shop)"
       >
@@ -33,6 +39,7 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  layout: 'dashboard',
   computed: {
     ...mapGetters('shop', ['shops']),
   },

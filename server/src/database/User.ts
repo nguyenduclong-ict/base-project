@@ -6,7 +6,7 @@ import {
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes, Types } from 'mongoose'
 import { Role } from './Role'
-import { Shop } from './Shop'
+import { Customer, Shop } from './Shop'
 
 class User {
   _id?: Types.ObjectId
@@ -34,6 +34,19 @@ class User {
   roles?: Role[]
 
   shops?: Shop[]
+
+  /** Loại tài khoản, quản lý shop hoặc khách hàng
+   * admin: Nhân viên shop hoặc admin
+   * customer: Khách hàng
+   */
+  @field({ type: String, enum: ['admin', 'customer'], default: 'admin' })
+  type: 'admin' | 'customer'
+
+  @field({
+    type: SchemaTypes.ObjectId,
+    ref: 'Customer',
+  })
+  customer: Customer
 
   createdAt?: Date
   updatedAt?: Date

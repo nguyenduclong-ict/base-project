@@ -96,7 +96,7 @@ export default {
           })
         )
 
-        this.data = response
+        this.data = response.data || response
       } catch (error) {
         console.log('fetchData Error', error)
       }

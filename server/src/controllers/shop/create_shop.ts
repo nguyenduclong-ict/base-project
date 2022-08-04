@@ -2,6 +2,7 @@ import { connection } from '@/config'
 import {
   AutoIncreaseTools,
   AutoIncreaseType,
+  RoleModel,
   ShopModel,
   TaxTypeModel,
   WarehouseModel,
@@ -79,6 +80,38 @@ export const _createShopController: RequestHandler<
       ],
       { session }
     )
+
+    let adminRole = req.user.roles.find((role) => role.full_permission)
+
+    if (!adminRole) {
+      adminRole = await RoleModel.create(
+        [
+          {
+            created_by: objectIdToString(req.user),
+            is_default: false,
+            name: 'Admin của shop ' + req.body.name,
+            full_permission: true,
+            uid: createSlug(code + '-admin'),
+            shops: [objectIdToString(shop)],
+          },
+        ],
+        { session }
+      ).then((docs) => docs[0])
+    } else {
+      await RoleModel.updateOne(
+        {
+          id: objectIdToString(adminRole),
+        },
+        {
+          $push: {
+            shops: objectIdToString(shop),
+          },
+        },
+        {
+          session,
+        }
+      )
+    }
 
     // init default warehouse
     const [defaultWarehouse] = await WarehouseModel.create(

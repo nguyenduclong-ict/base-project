@@ -2,12 +2,7 @@ import { Request, RequestHandler, Router } from 'express'
 import _ from 'lodash'
 import { Model } from 'mongoose'
 import { resolve as resolveUrl } from 'url'
-import {
-  findDocuments,
-  listDocuments,
-  parseJSON,
-  parsePopulateFromRequest,
-} from './mongo'
+import { findDocuments, listDocuments, parsePopulateFromRequest } from './mongo'
 
 export type LiteralUnion<T extends U, U = string> =
   | T
@@ -50,16 +45,7 @@ export const listEntityController = (model: Model<any>): RequestHandler => {
 export const findOneEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
     try {
-      let query: any = {}
-
-      if (req.query.query) {
-        query = parseJSON(req.query.query)
-      }
-
-      // Inject shop query
-      if (req.shopId) {
-        query[req.shopId] = req.shopId
-      }
+      let query: any = req.query.query || {}
 
       const queryBuilder = model.findOne(query)
 
@@ -78,22 +64,12 @@ export const findOneEntityController = (model: Model<any>): RequestHandler => {
 export const findEntityController = (model: Model<any>): RequestHandler => {
   return async (req, res, next) => {
     try {
-      let query: any = {}
-
-      if (req.query.query) {
-        try {
-          query = JSON.parse(req.query.query as string)
-        } catch (error) {}
-      }
-
-      // Inject shop query
-      if (req.shopId) {
-        query[req.shopId] = req.shopId
-      }
+      let query: any = req.query.query || {}
 
       const result = await findDocuments(model, {
         query,
         page: req.query.page as any,
+        pageSize: req.query.pageSize as any,
         populates: req.query.populates as any,
         sort: req.query.sort as any,
         select: req.query.select as any,

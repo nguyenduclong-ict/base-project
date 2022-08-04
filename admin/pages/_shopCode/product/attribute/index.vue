@@ -110,7 +110,7 @@ export default {
       config: {
         endpoint: '/attribute',
         payload: {
-          'query[shop_id]': this.$store.state.shop.currentShop?.id,
+          'query[shop]': this.$store.state.shop.currentShop?.id,
           sort: ['-createdAt'],
           popuplates: ['parent'],
         },

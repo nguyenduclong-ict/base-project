@@ -2,7 +2,7 @@ import { ShopModel, UserModel } from '@/database'
 import { compareObjectId, objectIdToString, verifyToken } from '@/helpers'
 import consola from 'consola'
 import { RequestHandler } from 'express'
-import { get } from 'lodash'
+import _, { get } from 'lodash'
 
 export const getUser: RequestHandler = async (req, res, next) => {
   const token = req.headers.authorization?.startsWith('Bearer ')
@@ -48,8 +48,12 @@ export const isShopMember = function (
         get(req.query?.query, 'shop') ||
         get(req.body, 'shop')
 
+    const shopIds = _.uniq(
+      req.user.roles.flatMap((role) => role.shops.map(objectIdToString))
+    )
+
     const shops = await ShopModel.find({
-      _id: { $in: req.user.roles.map((role) => objectIdToString(role.shop)) },
+      _id: { $in: shopIds },
     })
 
     const shop = shopId && shops.find((shop) => compareObjectId(shop, shopId))
@@ -77,14 +81,12 @@ const _isAuthenticated: RequestHandler = async (req, res, next) => {
 
 export const isAuthenticated = [getUser, _isAuthenticated]
 
-const _isAdmin: RequestHandler = async (req, res, next) => {
+export const isAdmin: RequestHandler = async (req, res, next) => {
   if (!req.user.is_admin) {
     return req.sendError({ code: 403, message: 'User not have permission' })
   }
   next()
 }
-
-export const isAdmin = [isAuthenticated, _isAdmin]
 
 // have permission middleware
 export const hasPermisison = (...permissions: string[]) => {
@@ -94,8 +96,9 @@ export const hasPermisison = (...permissions: string[]) => {
 
     let pass
     for (const role of roles) {
+      const shops = role.shops.map(objectIdToString)
       pass =
-        (shopId ? shopId === objectIdToString(role.shop) : true) &&
+        (shopId ? shops.includes(shopId) : true) &&
         (role.full_permission ||
           permissions.some((p) => role.permissions.includes(p)))
 

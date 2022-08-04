@@ -1,2 +1,5 @@
+export * from './Customer'
+export * from './Log'
 export * from './Shop'
+export * from './ShopSetting'
 export * from './TaxType'

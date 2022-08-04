@@ -43,6 +43,10 @@ class Provider {
   ward_code: string
   // end address
 
+  /** Công nợ */
+  @field({ type: Number, default: 0 })
+  debt: number
+
   @field(String)
   description: string
 

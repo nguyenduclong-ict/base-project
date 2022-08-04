@@ -7,10 +7,10 @@
     ]"
   >
     <el-popover
+      v-if="currentShop"
       v-model="isShowSelectShop"
       placement="right"
       popper-class="popover-select-shop"
-      v-if="currentShop"
     >
       <div
         slot="reference"
@@ -43,9 +43,9 @@
         :view-style="[{ 'border-radius': '4px', overflow: 'hidden' }]"
       >
         <nuxt-link
-          :to="`/${shop.code}/statistic`"
           v-for="shop in user.shops"
           :key="shop.id"
+          :to="`/${shop.code}/statistic`"
           class="shop-item cursor-pointer flex items-center p-2"
           @click.native="isShowSelectShop = false"
         >
@@ -77,7 +77,7 @@
         :collapse="!sidebarOpened"
         :collapse-transition="false"
       >
-        <template v-for="item in items">
+        <template v-for="item in menuItems">
           <el-submenu
             v-if="item.children"
             :key="item.key || item.route"
@@ -85,7 +85,7 @@
             :class="item.icon && 'has-icon'"
           >
             <template slot="title">
-              <i v-if="item.icon" :class="item.icon"></i>
+              <Icon v-if="item.icon" :name="item.icon" />
               <span>{{ item.title }}</span>
             </template>
 
@@ -95,7 +95,7 @@
               :index="child.key || child.route"
               :route="child.route"
             >
-              <i v-if="child.icon" :class="child.icon"></i>
+              <Icon v-if="child.icon" :name="child.icon" />
               <span>{{ child.title }}</span>
             </el-menu-item>
           </el-submenu>
@@ -106,7 +106,7 @@
             :index="item.key || item.route"
             :route="item.route"
           >
-            <i v-if="item.icon" :class="item.icon"></i>
+            <Icon v-if="item.icon" :name="item.icon" />
             <span>{{ item.title }}</span>
           </el-menu-item>
         </template>
@@ -116,9 +116,9 @@
 </template>
 
 <script>
-import MenuItem from './MenuItem.vue'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import Avatar from '../Common/Avatar.vue'
+import MenuItem from './MenuItem.vue'
 
 export default {
   components: {
@@ -126,30 +126,38 @@ export default {
     Avatar,
   },
 
+  props: {
+    items: {
+      type: Array,
+      default: [],
+    },
+    shop: {
+      type: Boolean,
+    },
+  },
+
   data() {
     return {
       isShowSelectShop: false,
-      defaultActive: this.$route.path,
+      defaultActive: '',
     }
-  },
-
-  watch: {
-    '$route.path'(value) {
-      this.defaultActive = value
-    },
   },
 
   computed: {
     ...mapState({
       sidebarOpened: (state) => state.sidebar,
     }),
-    ...mapState(['sidebarItems']),
+    ...mapState(['sidebarItems', 'sidebarKey']),
     ...mapState('auth', ['user']),
     ...mapState('shop', ['currentShop']),
-    ...mapGetters('permission', ['userPermissions', 'isFullPermission']),
-    items() {
+    ...mapGetters('permission', [
+      'isFullPermission',
+      'userPermissions',
+      'shopPermissions',
+    ]),
+    menuItems() {
       const items = []
-      this.sidebarItems?.forEach((item) => {
+      this.items?.forEach((item) => {
         if (this.canShowSidebarItem(item)) {
           const copyOfItem = {
             ...item,
@@ -189,6 +197,24 @@ export default {
     },
   },
 
+  watch: {
+    '$route.path'(value) {
+      this.defaultActive = this.sidebarKey || value
+    },
+  },
+
+  created() {
+    this.defaultActive = this.sidebarKey || this.$route.path
+  },
+
+  mounted() {
+    window.addEventListener('resize', this.onResize)
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize)
+  },
+
   methods: {
     ...mapMutations(['TOGGLE_SIDEBAR']),
     onResize() {
@@ -199,23 +225,16 @@ export default {
       }
     },
     canShowSidebarItem(item) {
-      if (typeof item.shop === 'boolean') {
-        return !!this.currentShop === item.shop
-      }
+      const userPermission = this.shop
+        ? this.shopPermission
+        : this.userPermission
+
       return (
         !item.permission ||
         this.isFullPermission ||
-        this.userPermisisons.includes(item.permission)
+        userPermission.includes(item.permission)
       )
     },
-  },
-
-  mounted() {
-    window.addEventListener('resize', this.onResize)
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResize)
   },
 }
 </script>

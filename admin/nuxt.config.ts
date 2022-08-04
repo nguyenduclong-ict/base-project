@@ -1,6 +1,7 @@
 import { NuxtConfig } from '@nuxt/types'
 
-export default {
+const config: NuxtConfig = {
+  ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   srcDir: __dirname,
   head: {
@@ -18,11 +19,7 @@ export default {
   css: ['~/assets/css/main.scss', 'element-ui/lib/theme-chalk/index.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    { src: '@/plugins/client', ssr: false },
-    '@/plugins/element-ui',
-    '@/plugins/mixin',
-  ],
+  plugins: ['@/plugins/client', '@/plugins/element-ui', '@/plugins/mixin'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: false,
@@ -39,8 +36,6 @@ export default {
   },
 
   modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/tailwindcss'],
-
-  devServerHandlers: [],
 
   auth: {
     strategies: {
@@ -74,10 +69,8 @@ export default {
     progress: false,
   },
 
-  serverMiddleware: ['~/plugins/ssr'],
-
   router: {
-    middleware: ['auth', 'shop', 'breadcrumb'],
+    middleware: ['auth', 'shop', 'meta'],
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -85,3 +78,5 @@ export default {
     transpile: [/^element-ui/],
   },
 } as NuxtConfig
+
+export default config

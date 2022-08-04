@@ -1,6 +1,9 @@
 <template>
   <div class="data-table">
     <el-table ref="table" border class="data-table" :data="data">
+      <div slot="empty" class="flex justify-center items-center">
+        <el-empty :image-size="82" />
+      </div>
       <template v-for="col in columns">
         <slot v-if="col.type === 'slot'" :name="`column-${col.prop}`"></slot>
         <el-table-column

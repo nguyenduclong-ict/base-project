@@ -57,8 +57,7 @@
       v-else
       class="h-60 text-gray-300 flex items-center justify-center flex-col"
     >
-      <svg-icon name="empty" class="mb-4" style="width: 96px; height: 96px" />
-      Bạn chưa tải lên ảnh nào
+      <el-empty description="Bạn chưa tải lên ảnh nào"></el-empty>
     </div>
 
     <el-pagination

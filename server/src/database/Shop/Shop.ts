@@ -11,7 +11,7 @@ class Shop {
   // _id?: any
   id?: any
 
-  @field(String)
+  @field({ type: String, index: 'text', required: true })
   name: string
 
   @field({ type: String, unique: true, required: true })
@@ -22,6 +22,26 @@ class Shop {
 
   @field({ type: String })
   color: string
+
+  // address
+  @field(String)
+  address: string
+
+  @field(String)
+  address2: string
+
+  @field(String)
+  country_code: string
+
+  @field(String)
+  province_code: string
+
+  @field(String)
+  district_code: string
+
+  @field(String)
+  ward_code: string
+  // end address
 
   @field({ type: SchemaTypes.ObjectId, ref: 'User' })
   created_by?: User

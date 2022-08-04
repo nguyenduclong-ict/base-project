@@ -1,9 +1,9 @@
 <template>
   <component
+    :is="route ? 'router-link' : 'li'"
     class="el-menu-item"
     role="menuitem"
     tabindex="-1"
-    :is="route ? 'router-link' : 'li'"
     :to="route"
     :style="[paddingStyle, itemStyle, { backgroundColor }]"
     :class="{

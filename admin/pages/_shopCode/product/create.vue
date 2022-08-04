@@ -33,6 +33,7 @@ export default {
   components: { ProductForm },
 
   meta: {
+    sidebarKey: '/{shopCode}/product',
     breadcrumb: [
       {
         path: '/{shopCode}/product',

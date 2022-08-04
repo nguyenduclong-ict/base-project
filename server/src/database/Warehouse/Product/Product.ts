@@ -72,11 +72,23 @@ class Product {
   @field({ type: Boolean, default: false })
   has_variants: boolean
 
-  @field({ type: Number, min: 0 })
+  @field({ type: Number, min: 0, default: 0 })
   price: number
 
-  @field({ type: Number, min: 0 })
+  @field({ type: Number, min: 0, default: 0 })
   sale_off_price: number
+
+  /** Giá bán buôn, dùng để fill nhanh vào đơn hàng */
+  @field({ type: Number, min: 0, default: 0 })
+  wholesale_price: number
+
+  /** Giá bán lẻ, dùng để fill nhanh vào đơn hàng */
+  @field({ type: Number, min: 0, default: 0 })
+  retail_price: number
+
+  /** Giá bán nhập, dùng để fill nhanh vào phiếu nhập hàng */
+  @field({ type: Number, min: 0, default: 0 })
+  import_price: number
 
   @field(Boolean)
   is_sale_off: boolean

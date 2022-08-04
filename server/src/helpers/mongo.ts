@@ -159,6 +159,7 @@ export const findDocuments = async <T>(
   const pageSize = +(params.pageSize || 10)
 
   let query: any = { ...params.query }
+
   let populates: any[] = parsePopulateFromRequest(params.populates || [])
   let sort: any = {}
 

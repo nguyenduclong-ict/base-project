@@ -1,7 +1,7 @@
 <template>
   <div id="layout-default">
     <div id="sidebar-wrapper">
-      <Sidebar id="sidebar" :items="sidebarItems" :shop="true" />
+      <Sidebar id="sidebar" :items="dashboardSidebar" />
     </div>
     <div v-if="sidebar" class="overlay" @click="TOGGLE_SIDEBAR()"></div>
 
@@ -32,7 +32,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['sidebar', 'sidebarItems']),
+    ...mapState(['sidebar', 'dashboardSidebar']),
   },
 
   mounted() {

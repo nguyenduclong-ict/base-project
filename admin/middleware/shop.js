@@ -1,4 +1,5 @@
 export default function ({ route, $auth, redirect, store }) {
+  console.log('[middleware]: shop');
   if (route.params.shopCode) {
     const shop = $auth.user.shops.find(shop => shop.code === route.params.shopCode)
     if (!shop) redirect('/dashboard')

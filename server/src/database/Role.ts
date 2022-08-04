@@ -7,6 +7,7 @@ import {
 } from '@/helpers/mongo'
 import { Schema, SchemaTypes } from 'mongoose'
 import { Shop } from './Shop'
+import { User } from './User'
 
 class Role {
   @field(String)
@@ -28,8 +29,11 @@ class Role {
   @field({ type: Boolean, default: false })
   is_default: boolean
 
-  @field({ type: SchemaTypes.ObjectId, ref: 'Shop' })
-  shop: Shop
+  @field([{ type: SchemaTypes.ObjectId, ref: 'Shop' }])
+  shops: Shop[]
+
+  @field([{ type: SchemaTypes.ObjectId, ref: 'User' }])
+  created_by: User
 
   createdAt?: Date
   updatedAt?: Date

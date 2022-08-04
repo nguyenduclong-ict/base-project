@@ -108,7 +108,19 @@ class BodyCreateProduct {
   @IsNumber()
   sale_off_price: number
 
+  @IsNumber()
+  wholesale_price: number
+
+  @IsNumber()
+  @IsOptional()
+  retail_price: number
+
+  @IsNumber()
+  @IsOptional()
+  import_price: number
+
   @IsBoolean()
+  @IsOptional()
   is_sale_off: boolean
 
   @IsString()
@@ -145,9 +157,12 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
           shop: req.body.shop,
           slug: req.body.slug,
           price: req.body.price,
+          sale_off_price: req.body.sale_off_price,
+          retail_price: req.body.retail_price,
+          wholesale_price: req.body.wholesale_price,
+          import_price: req.body.import_price,
           name: req.body.name,
           categories: req.body.categories,
-          sale_off_price: req.body.sale_off_price,
         },
       ],
       { session }
@@ -190,9 +205,12 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
                 req.body.name,
                 variant.values
               ),
-            price: variant.price,
+            price: req.body.price,
+            sale_off_price: req.body.sale_off_price,
+            retail_price: req.body.retail_price,
+            wholesale_price: req.body.wholesale_price,
+            import_price: req.body.import_price,
             categories: req.body.categories,
-            sale_off_price: variant.sale_off_price,
           }
         }),
         { session }

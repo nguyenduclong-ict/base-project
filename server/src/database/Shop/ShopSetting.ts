@@ -14,7 +14,7 @@ export enum ShopSettingType {
 export interface TaxSetting {
   default_sale_tax: any
   default_import_tax: any
-  use_tax: boolean // giá nhập, giá bán có bao gồm thuế hay không, khi tính giá vốn, sử dụng khi tính giá vống
+  use_tax: boolean // giá nhập, giá bán có bao gồm thuế hay không, khi tính giá vốn, sử dụng khi tính giá vốn
 }
 
 class ShopSetting {

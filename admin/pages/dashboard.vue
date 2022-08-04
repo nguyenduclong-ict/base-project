@@ -1,9 +1,10 @@
 <template>
-  <div>hhehe</div>
+  <div class="page-content">hhehe</div>
 </template>
 
 <script>
 export default {
+  layout: 'dashboard',
   asyncData() {},
 }
 </script>
