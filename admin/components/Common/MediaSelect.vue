@@ -21,11 +21,17 @@
         ></el-image>
 
         <el-button
+          v-if="closeIcon === 'normal'"
           class="icon absolute top-1 right-1"
           icon="el-icon-delete"
           size="mini"
           @click="deleteValue(item, index)"
         ></el-button>
+        <i
+          v-else
+          class="el-tag__close el-icon-close"
+          @click="deleteValue(item, index)"
+        ></i>
       </div>
 
       <div
@@ -292,6 +298,10 @@ export default {
     triggerSize: {
       type: Number,
       default: 128,
+    },
+    closeIcon: {
+      type: String,
+      default: 'normal', // small
     },
   },
 
@@ -624,7 +634,23 @@ export default {
     position: relative;
     width: 128px;
     height: 128px;
-    overflow: hidden;
+    .el-icon-close {
+      display: none;
+      cursor: pointer;
+      background-color: #f56c6c;
+      z-index: 1;
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      border-radius: 8px;
+      color: white;
+    }
+  }
+
+  .value-item:hover {
+    .el-icon-close {
+      display: block;
+    }
   }
 }
 </style>

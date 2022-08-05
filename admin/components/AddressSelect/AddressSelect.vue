@@ -1,7 +1,7 @@
 <template>
   <div class="address-select flex flex-wrap">
     <div class="flex w-full gap-2 flex-wrap">
-      <el-form-item class="flex-1" label="Tỉnh/Thành phố">
+      <el-form-item class="flex-1" label="Tỉnh/Thành phố" :required="required">
         <SelectEntity
           v-model="value.province_code"
           placeholder="Chọn tỉnh/thành phố"
@@ -11,7 +11,7 @@
         />
       </el-form-item>
 
-      <el-form-item class="flex-1" label="Quận/Huyện">
+      <el-form-item class="flex-1" label="Quận/Huyện" :required="required">
         <SelectEntity
           ref="selectDistrict"
           v-model="value.district_code"
@@ -21,7 +21,7 @@
         />
       </el-form-item>
 
-      <el-form-item class="flex-1" label="Phường/Xã">
+      <el-form-item class="flex-1" label="Phường/Xã" :required="required">
         <SelectEntity
           ref="selectWard"
           v-model="value.ward_code"
@@ -32,7 +32,7 @@
       </el-form-item>
     </div>
     <el-form-item label="Địa chỉ" class="w-full">
-      <el-input v-model="value.address2" type="textarea"></el-input>
+      <el-input v-model="value.address" type="textarea"></el-input>
     </el-form-item>
     <el-form-item v-if="address2" label="Địa chỉ 2" class="w-full">
       <el-input v-model="value.address2" type="textarea"></el-input>
@@ -51,6 +51,7 @@ export default {
     address2: {
       type: Boolean,
     },
+    required: Boolean,
   },
 
   data() {

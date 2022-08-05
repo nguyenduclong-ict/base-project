@@ -65,7 +65,7 @@
     </el-popover>
 
     <el-scrollbar
-      :style="`height: calc(100vh - ${logoHeight}px);`"
+      :style="`height: calc(100vh - ${logoHeight + (shop ? 48 : 0)}px);`"
       :wrap-style="[
         { height: `calc(100vh - ${logoHeight}px)`, overflowX: 'hidden' },
       ]"
@@ -114,6 +114,19 @@
         </template>
       </el-menu>
     </el-scrollbar>
+    <div v-if="shop" style="height: 48px; padding: 5px 10px">
+      <nuxt-link
+        class="cursor-pointer hover:text-primary flex items-center h-full rounded bg-slate-500 hover:bg-slate-600 text-white"
+        to="/dashboard"
+        style="padding: 0 10px"
+        :class="[!sidebarOpened && 'justify-center']"
+      >
+        <Icon name="el-icon-s-home" />
+        <span v-if="sidebarOpened" style="font-size: 14px; margin-left: 5px">
+          Trang chủ
+        </span>
+      </nuxt-link>
+    </div>
   </div>
 </template>
 

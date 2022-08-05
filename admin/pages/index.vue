@@ -4,6 +4,7 @@
 
 <script>
 export default {
+  layout: 'dashboard',
   asyncData({ redirect, $auth }) {
     const shopId = localStorage.getItem('current_shop')
     const shop = $auth.user.shops.find((shop) => shop.id === shopId)

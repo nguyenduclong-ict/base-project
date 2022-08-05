@@ -6,7 +6,7 @@ import {
 } from '@/helpers/mongo'
 import { Schema } from 'mongoose'
 
-class TaxType {
+class Tax {
   @field({ type: String, required: true })
   name: string
 
@@ -23,16 +23,16 @@ class TaxType {
   updatedAt?: Date
 }
 
-const TaxTypeSchema = new Schema<TaxType>(
+const TaxSchema = new Schema<Tax>(
   {
-    ...getSchemaDefinition(TaxType),
+    ...getSchemaDefinition(Tax),
   },
   { timestamps: true, autoIndex: true }
 )
 
-addTransformIdForSchema(TaxTypeSchema)
+addTransformIdForSchema(TaxSchema)
 
-const TaxTypeModel = registerModel<TaxType>('TaxType', TaxTypeSchema)
-const TaxTypeTools = { model: TaxTypeModel }
+const TaxModel = registerModel<Tax>('Tax', TaxSchema)
+const TaxTools = { model: TaxModel }
 
-export { TaxType, TaxTypeSchema, TaxTypeModel, TaxTypeTools }
+export { Tax, TaxSchema, TaxModel, TaxTools }

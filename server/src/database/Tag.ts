@@ -13,6 +13,7 @@ export enum TagType {
   STOCK_ADJUSTMENT = 'STOCK_ADJUSTMENT', // Kiểm kho
   STOCK_STRANSFER = 'STOCK_STRANSFER', // Chuyển hàng
   PROVIDER = 'PROVIDER', // Nhà cung cấp
+  PRODUCT = 'PRODUCT',
 }
 
 class Tag {

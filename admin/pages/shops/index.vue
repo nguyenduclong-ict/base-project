@@ -1,11 +1,12 @@
 <template>
-  <div class="p-8">
-    <div class="mb-8 flex gap-8">
-      <el-input
-        prefix-icon="el-icon-search"
+  <div class="page-content">
+    <div class="mb-8 flex gap-4">
+      <InputSearch
+        :debounce="0"
         placeholder="Tìm kiếm shop"
         class="max-w-xs"
-      ></el-input>
+        @search="handleSearchShop"
+      ></InputSearch>
       <el-button
         icon="el-icon-plus"
         type="primary"
@@ -18,11 +19,12 @@
       <nuxt-link
         v-for="shop in shops"
         :key="shop.id"
+        style="min-width: 256px; min-height: 128px"
         :to="`/${shop.code}/statistic`"
         class="cursor-pointer"
         @click.native="handleSelectShop(shop)"
       >
-        <el-card>
+        <el-card class="w-full h-full">
           <Avatar
             :src="shop.image_url"
             :name="shop.name"
@@ -38,15 +40,34 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import InputSearch from '~/components/Common/InputSearch.vue'
+import { searchString } from '~/utils'
+import _ from '~/utils/lodash'
 export default {
+  components: { InputSearch },
   layout: 'dashboard',
-  computed: {
-    ...mapGetters('shop', ['shops']),
+
+  data() {
+    return {
+      shops: _.cloneDeep(this.$store.getters?.['shop/shops'] || []),
+    }
   },
 
   methods: {
     handleSelectShop(shop) {
       localStorage.setItem('current_shop', shop.id)
+    },
+
+    handleSearchShop(query) {
+      if (!query) {
+        this.shops = _.cloneDeep(this.$store.getters?.['shop/shops'] || [])
+        return
+      }
+      this.shops = _.cloneDeep(
+        this.$store.getters['shop/shops'].filter((shop) =>
+          searchString([shop.name], query)
+        )
+      )
     },
   },
 }

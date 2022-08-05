@@ -1,5 +1,5 @@
 <template>
-  <div class="py-5 px-10">
+  <div class="page-content">
     <div class="flex mb-2">
       <div class="flex-1"></div>
       <div>
@@ -11,7 +11,7 @@
       </div>
     </div>
     <DataTable :config="config" @edit="editProduct">
-      <el-table-column slot="column-image" :width="72">
+      <el-table-column slot="column-image" label="Ảnh" :width="72">
         <template slot-scope="{ row }">
           <el-image
             v-if="row.image"
@@ -51,11 +51,11 @@ export default {
         },
         columns: [
           { type: 'index', label: 'STT' },
+          { type: 'slot', prop: 'image' },
           {
-            label: 'Tên sản phẩm',
+            label: 'Sản phẩm',
             prop: 'name',
           },
-          { type: 'slot', prop: 'image' },
           { label: 'Giá', prop: 'price' },
           { type: 'controls', buttons: ['edit'] },
         ],

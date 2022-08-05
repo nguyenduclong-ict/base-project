@@ -14,12 +14,12 @@ export enum ShopSettingType {
 export interface TaxSetting {
   default_sale_tax: any
   default_import_tax: any
-  use_tax: boolean // giá nhập, giá bán có bao gồm thuế hay không, khi tính giá vốn, sử dụng khi tính giá vốn
+  price_include_tax: boolean // Giá sản phẩm đã bao gồm thuế hay chưa
 }
 
-class ShopSetting {
+class ShopSetting<E = any> {
   @field({ type: SchemaTypes.Mixed })
-  value: TaxSetting
+  value: E
 
   @field({ type: String, enum: Object.values(ShopSettingType) })
   type: ShopSettingType

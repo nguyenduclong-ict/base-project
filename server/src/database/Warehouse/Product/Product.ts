@@ -1,3 +1,4 @@
+import { Tax } from '@/database/Shop'
 import { createSlug } from '@/helpers'
 import {
   addTransformIdForSchema,
@@ -10,12 +11,11 @@ import shortid from 'shortid'
 import { MediaImage } from '../../Media'
 import { Shop } from '../../Shop/Shop'
 import { Category } from '../Category'
-import { ProductAttribute, ProductAttributeSchema } from '../ProductAttribute'
 
 /** ProductVariantValue */
 export class ProductVariantValue {
   @field(String)
-  slug: string
+  attribute: string
 
   @field(SchemaTypes.Mixed)
   value: string
@@ -26,6 +26,20 @@ const ProductVariantValueSchema = new Schema<ProductVariantValue>(
   { timestamps: true }
 )
 addTransformIdForSchema(ProductVariantValueSchema)
+
+export class ProductAttribute {
+  @field({ type: String, required: true })
+  name: string
+
+  @field({ type: Array, of: String })
+  values: string[]
+}
+
+const ProductAttributeSchema = new Schema<ProductVariantValue>(
+  getSchemaDefinition(ProductVariantValue),
+  { timestamps: true }
+)
+addTransformIdForSchema(ProductAttributeSchema)
 
 class Product {
   @field({ type: String, required: true, index: 'text' })
@@ -41,6 +55,12 @@ class Product {
     index: 'text',
   })
   slug: string
+
+  @field({ type: String, index: 'text' })
+  sku?: string
+
+  @field({ type: String, index: 'text' })
+  barcode?: string
 
   @field(String)
   description: string
@@ -90,8 +110,20 @@ class Product {
   @field({ type: Number, min: 0, default: 0 })
   import_price: number
 
+  @field({ type: SchemaTypes.ObjectId, ref: 'Tax' })
+  sale_tax: Tax
+
+  @field({ type: SchemaTypes.ObjectId, ref: 'Tax' })
+  import_tax: Tax
+
+  @field(Boolean)
+  price_include_tax: boolean // Giá sản phẩm đã bao gồm thuế hay chưa
+
   @field(Boolean)
   is_sale_off: boolean
+
+  @field({ type: Boolean, default: true })
+  active: boolean
 
   /**
    * Giá vốn tính theo công thức bình quân

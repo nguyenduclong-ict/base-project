@@ -1,5 +1,5 @@
 <template>
-  <div class="py-5 px-10 medias-page">
+  <div class="page-content medias-page">
     <div class="mb-4 flex">
       <InputSearch
         style="width: 250px"

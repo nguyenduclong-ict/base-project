@@ -1,9 +1,15 @@
 import { connection } from '@/config'
 import {
+  AutoIncreaseTools,
+  AutoIncreaseType,
   MediaImage,
   ProductAttribute,
   ProductModel,
   ProductTools,
+  ShopSetting,
+  ShopSettingModel,
+  ShopSettingType,
+  TaxSetting,
 } from '@/database'
 import { createSlug } from '@/helpers'
 import { createValidate } from '@/helpers/validator'
@@ -22,7 +28,7 @@ import { RequestHandler } from 'express'
 
 class VariantValue {
   @IsString()
-  slug: string
+  attribute: string
 
   @IsString()
   value: string
@@ -34,6 +40,14 @@ class Variant {
   @ValidateNested()
   @Type(() => VariantValue)
   variant_values: VariantValue[]
+
+  @IsString()
+  @IsOptional()
+  sku: string
+
+  @IsString()
+  @IsOptional()
+  barcode: string
 
   @IsNumber()
   price: number
@@ -61,6 +75,17 @@ class Variant {
 class BodyCreateProduct {
   @IsString()
   name: string
+
+  @IsBoolean()
+  active: boolean
+
+  @IsString()
+  @IsOptional()
+  sku: string
+
+  @IsString()
+  @IsOptional()
+  barcode: string
 
   @IsString()
   @IsOptional()
@@ -142,6 +167,11 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
   await session.startTransaction()
 
   try {
+    const taxSetting: ShopSetting<TaxSetting> = await ShopSettingModel.findOne({
+      type: ShopSettingType.TAX,
+      shop: req.body.shop,
+    })
+
     // create parent product
     const [product] = await ProductModel.create(
       [
@@ -152,13 +182,26 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
           attributes: req.body.attributes,
           shop: req.body.shop,
           slug: req.body.slug,
+          sku:
+            req.body.sku ||
+            (await AutoIncreaseTools.generateCode(
+              'SP',
+              AutoIncreaseType.PRODUCT_SKU,
+              4,
+              req.body.shop
+            )),
+          barcode: req.body.barcode,
           price: req.body.price,
           sale_off_price: req.body.sale_off_price,
           retail_price: req.body.retail_price,
           wholesale_price: req.body.wholesale_price,
           import_price: req.body.import_price,
           name: req.body.name,
+          active: req.body.active,
           categories: req.body.categories,
+          sale_tax: taxSetting.value.default_sale_tax,
+          import_tax: taxSetting.value.default_import_tax,
+          price_include_tax: taxSetting.value.price_include_tax,
         },
       ],
       { session }
@@ -181,8 +224,8 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
       }
 
       // create variants
-      const variants = await ProductModel.create(
-        req.body.variants.map((variant) => {
+      const variantData = await Promise.all(
+        req.body.variants.map(async (variant) => {
           return {
             variant_of: product.id,
             image: variant.image,
@@ -201,17 +244,30 @@ export const handler: RequestHandler<any, any, BodyCreateProduct> = async (
                 req.body.name,
                 variant.variant_values
               ),
+            active: req.body.active,
+            sku:
+              req.body.sku ||
+              (await AutoIncreaseTools.generateCode(
+                'SP',
+                AutoIncreaseType.PRODUCT_SKU,
+                4,
+                req.body.shop
+              )),
+            barcode: variant.barcode,
             price: req.body.price,
             sale_off_price: req.body.sale_off_price,
             retail_price: req.body.retail_price,
             wholesale_price: req.body.wholesale_price,
             import_price: req.body.import_price,
             categories: req.body.categories,
+            sale_tax: taxSetting.value.default_sale_tax,
+            import_tax: taxSetting.value.default_import_tax,
+            price_include_tax: taxSetting.value.price_include_tax,
           }
-        }),
-        { session }
+        })
       )
 
+      const variants = await ProductModel.create(variantData, { session })
       product.variants = variants
     }
 

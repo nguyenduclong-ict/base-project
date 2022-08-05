@@ -43,19 +43,17 @@ export const ProductTools = {
       }
 
       item.variant_values.forEach((value) => {
-        if (!product.attributes.find((attr) => attr.slug === value.slug)) {
+        if (!product.attributes.find((attr) => attr.name === value.attribute)) {
           throw new Error(
-            `Variant values 'slug' ${value.slug} not found in product`
+            `Variant values 'slug' ${value.attribute} not found in product`
           )
         }
 
         if (
-          !product.attributes.find((attr) =>
-            attr.values.find((v) => v.slug === value.slug)
-          )
+          !product.attributes.find((attr) => attr.values.includes(value.value))
         ) {
           throw new Error(
-            `Variant values 'slug' ${value.slug} not found in product`
+            `Variant values 'slug' ${value.value} not found in product`
           )
         }
       })

@@ -1,5 +1,5 @@
 <template>
-  <div class="py-5 px-10">
+  <div class="page-content">
     <div class="pb-2 flex">
       <div class="flex-1">
         <el-page-header
@@ -19,18 +19,18 @@
         </el-button>
       </div>
     </div>
-    <ProductForm ref="productForm" :form="form" />
+    <ProductFormCreate ref="productForm" :form="form" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import ProductForm from '~/components/Product/ProductForm.vue'
+import ProductFormCreate from '~/components/Product/ProductFormCreate.vue'
 import _ from '~/utils/lodash'
 import { getErrorMessage } from '~/utils/request'
 
 export default {
-  components: { ProductForm },
+  components: { ProductFormCreate },
 
   meta: {
     sidebarKey: '/{shopCode}/product',

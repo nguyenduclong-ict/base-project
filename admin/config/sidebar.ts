@@ -46,15 +46,17 @@ export const shopSidebar: SidebarItem[] = [
     icon: 'el-icon-box',
     children: [
       { title: 'Danh sách sản phẩm', route: '/{shopCode}/product' },
-      { title: 'Nhập hàng', route: '/{shopCode}/warehouse/import' },
+      { title: 'Nhập hàng', route: '/{shopCode}/product/import' },
       { title: 'Danh mục', route: '/{shopCode}/product/category' },
-      { title: 'Thuộc tính', route: '/{shopCode}/product/attribute' },
     ],
   },
   {
     title: 'Cài đặt',
     icon: 'el-icon-setting',
     key: 'setting',
-    children: [{ title: 'Thư viện ảnh', route: '/{shopCode}/setting/media' }],
+    children: [
+      { title: 'Thư viện ảnh', route: '/{shopCode}/setting/media' },
+      { title: 'Thông tin cửa hàng', route: '/{shopCode}/setting/info' },
+    ],
   },
 ]

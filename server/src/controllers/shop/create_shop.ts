@@ -2,12 +2,10 @@ import { connection } from '@/config'
 import {
   AutoIncreaseTools,
   AutoIncreaseType,
-  ProductAttribute,
-  ProductAttributeModel,
   RoleModel,
   Shop,
   ShopModel,
-  TaxTypeModel,
+  TaxModel,
   User,
   UserModel,
   WarehouseModel,
@@ -81,6 +79,11 @@ export const _createShopController: RequestHandler<
           created_by: objectId(req.user.id),
           image_url: req.body.image_url,
           color: req.body.color,
+          address: req.body.address,
+          country_code: req.body.country_code,
+          province_code: req.body.province_code,
+          district_code: req.body.district_code,
+          ward_code: req.body.ward_code,
         },
       ],
       { session }
@@ -157,7 +160,7 @@ async function initAdminRoleForShop(user: User, shop: Shop, session: any) {
 }
 
 async function initShopSettings(shop: Shop, session: any) {
-  const [taxType] = await TaxTypeModel.create(
+  const [tax] = await TaxModel.create(
     [{ code: '10', rate: 10, name: 'Thuế 10%', modifiable: false }],
     { session }
   )
@@ -168,9 +171,9 @@ async function initShopSettings(shop: Shop, session: any) {
       shop: objectId(shop),
       is_default: true,
       value: {
-        default_sale_tax: objectId(taxType),
-        default_import_tax: objectId(taxType),
-        use_tax: true,
+        default_sale_tax: objectId(tax),
+        default_import_tax: objectId(tax),
+        price_include_tax: true,
       },
     },
   ])
@@ -202,37 +205,7 @@ async function initDefaultWarehouse(shop: Shop, session: any) {
   return defaultWarehouse
 }
 
-async function initShopData(shop: Shop, user: User, session: any) {
-  return Promise.all([
-    ProductAttributeModel.create(
-      [
-        {
-          name: 'Màu sắc',
-          shop: objectId(shop),
-          slug: 'color',
-          values: [
-            { value: 'Trắng', slug: 'trang' },
-            { value: 'Đen', slug: 'den' },
-            { value: 'Xanh', slug: 'xanh' },
-            { value: 'Đỏ', slug: 'do' },
-          ],
-        },
-        {
-          name: 'Size',
-          shop: objectId(shop),
-          slug: 'size',
-          values: [
-            { value: 'S', slug: 'S' },
-            { value: 'M', slug: 'M' },
-            { value: 'L', slug: 'L' },
-            { value: 'XL', slug: 'XL' },
-          ],
-        },
-      ] as ProductAttribute[],
-      { session }
-    ),
-  ])
-}
+async function initShopData(shop: Shop, user: User, session: any) {}
 
 export const createShopController = [
   createValidate(BodyCreateShop, 'body'),

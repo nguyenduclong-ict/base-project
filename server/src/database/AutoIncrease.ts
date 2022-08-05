@@ -10,6 +10,7 @@ import { Shop } from './Shop'
 
 export enum AutoIncreaseType {
   SHOP_CODE = 'SHOP_CODE',
+  PRODUCT_SKU = 'PRODUCT_SKU',
   WAREHOUSE_CODE = 'WAREHOUSE_CODE',
 }
 

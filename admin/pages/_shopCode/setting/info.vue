@@ -10,7 +10,7 @@
           Quay lại
         </el-button>
       </div>
-      <div class="text-2xl text-center">Tạo cửa hàng</div>
+      <div class="text-2xl text-center">Cập nhật thông tin cửa hàng</div>
 
       <div class="flex justify-center my-5">
         <el-image
@@ -54,8 +54,13 @@
       </el-form>
 
       <div class="flex justify-center">
-        <el-button type="primary" :loading="loading" @click="createShop">
-          Tạo cửa hàng
+        <el-button
+          type="success"
+          icon="el-icon-finished"
+          :loading="loading"
+          @click="updateShop"
+        >
+          Lưu thay đổi
         </el-button>
       </div>
     </el-card>
@@ -64,26 +69,33 @@
 
 <script>
 import AddressSelect from '~/components/AddressSelect/AddressSelect.vue'
+import { ShopMixin } from '~/mixins/shop'
+import _ from '~/utils/lodash'
 export default {
   components: { AddressSelect },
-  layout: 'dashboard',
+  mixins: [ShopMixin],
 
   meta: {
-    sidebarKey: '/shops',
+    breadcrumb: [
+      {
+        path: '/{shopCode}/setting/info',
+        name: 'Thông tin cửa hàng',
+      },
+    ],
   },
 
   data() {
+    const currentShop = this.$store.state.shop.currentShop
     return {
       loading: false,
       form: {
-        name: '',
-        image_url: '',
-        address: '',
-        address2: '',
-        country_code: 'VN',
-        province_code: null,
-        district_code: null,
-        ward_code: null,
+        name: currentShop.name,
+        image_url: currentShop.image_url,
+        address: currentShop.address || '',
+        country_code: currentShop.country_code || null,
+        province_code: currentShop.province_code || null,
+        district_code: currentShop.district_code || null,
+        ward_code: currentShop.ward_code || null,
       },
       rules: {
         name: [
@@ -127,18 +139,19 @@ export default {
       }
     },
 
-    async createShop() {
+    async updateShop() {
       this.loading = true
       try {
         const valid = await this.validateForm(this.$refs.form)
         if (valid) {
-          const response = await this.$axios.$post('/shop', { ...this.form })
-          this.$message.success('Khởi tạo shop thành công')
+          await this.$axios.$put('/shop/' + this.currentShop.id, {
+            ...this.form,
+          })
+          this.$message.success('Cập nhật shop thành công')
           await this.$auth.fetchUser()
-          this.$router.push(`/${response.code}/statistic`)
         }
       } catch (error) {
-        console.error(`createShop`, error)
+        console.error(`updateShop`, error)
       }
       this.loading = false
     },
